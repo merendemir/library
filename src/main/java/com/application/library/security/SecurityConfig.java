@@ -1,6 +1,7 @@
 package com.application.library.security;
 
 
+import com.application.library.exception.AuthenticationEntryPointException;
 import com.application.library.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +50,7 @@ public class SecurityConfig {
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(x -> x.authenticationEntryPoint(new AuthenticationEntryPointException()))
                 .build();
 
     }

@@ -1,4 +1,4 @@
-package com.application.library.data.dto;
+package com.application.library.data.dto.user;
 
 public class BaseUserSaveRequestDto {
     private String email;

@@ -1,6 +1,6 @@
 package com.application.library.service;
 
-import com.application.library.data.dto.LoginRequestDto;
+import com.application.library.data.dto.user.LoginRequestDto;
 import com.application.library.utils.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;

@@ -1,6 +1,6 @@
 package com.application.library.loader.data;
 
-import com.application.library.model.Role;
+import com.application.library.enumerations.UserRole;
 import com.application.library.model.User;
 import com.application.library.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -32,7 +32,7 @@ public class UserLoader implements ApplicationRunner {
         admin.setLastName("Admin");
         admin.setEmail(adminMail);
         admin.setPassword(bCryptPasswordEncoder.encode("123"));
-        admin.setAuthorities(Set.of(Role.ROLE_ADMIN));
+        admin.setAuthorities(Set.of(UserRole.ROLE_ADMIN));
         userRepository.save(admin);
     }
 }

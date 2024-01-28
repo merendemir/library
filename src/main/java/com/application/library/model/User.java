@@ -1,16 +1,21 @@
 package com.application.library.model;
 
-import com.application.library.core.model.BaseIntegerEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.application.library.core.model.IntegerSoftDeleteEntity;
+import com.application.library.enumerations.UserRole;
+import com.application.library.enumerations.UserRole;import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
 
-@Entity
-@Table(name = "users")
-public class User extends BaseIntegerEntity implements UserDetails {
+@Entity(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"email", "deleted"})})
+@SQLDelete(sql = "UPDATE users SET deleted = NULL, deleted_date_time = NOW() WHERE id = ?")
+@Where(clause = "deleted = false")
+public class User extends IntegerSoftDeleteEntity implements UserDetails {
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -18,7 +23,7 @@ public class User extends BaseIntegerEntity implements UserDetails {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @JsonIgnore
@@ -38,11 +43,11 @@ public class User extends BaseIntegerEntity implements UserDetails {
     private boolean credentialsNonExpired = true;
 
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<Role> authorities;
+    private Set<UserRole> authorities;
 
     public String getFirstName() {
         return firstName;
@@ -119,11 +124,11 @@ public class User extends BaseIntegerEntity implements UserDetails {
     }
 
     @Override
-    public Set<Role> getAuthorities() {
+    public Set<UserRole> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Role> authorities) {
+    public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
     }
 }

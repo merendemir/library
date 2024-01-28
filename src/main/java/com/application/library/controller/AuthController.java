@@ -1,8 +1,8 @@
 package com.application.library.controller;
 
 
-import com.application.library.data.dto.BaseUserSaveRequestDto;
-import com.application.library.data.dto.LoginRequestDto;
+import com.application.library.data.dto.user.BaseUserSaveRequestDto;
+import com.application.library.data.dto.user.LoginRequestDto;
 import com.application.library.service.AuthService;
 import com.application.library.service.UserService;
 import com.application.library.utils.ResponseHandler;

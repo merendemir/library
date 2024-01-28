@@ -4,6 +4,7 @@ import com.application.library.utils.ResponseHandler;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,6 +33,16 @@ public class DefaultExceptionHandler {
 
         String message = cause.getMessage();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseHandler<>("Data Integrity Violation: " + message));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseHandler<String>> handleAccessDeniedExceptions(AccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseHandler<>(exception.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalDeleteOperationException.class)
+    public ResponseEntity<ResponseHandler<String>> handleIllegalDeleteOperationExceptions(IllegalDeleteOperationException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseHandler<>(exception.getMessage()));
     }
 
 }

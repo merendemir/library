@@ -1,7 +1,7 @@
 package com.application.library.converter;
 
-import com.application.library.data.dto.BaseUserSaveRequestDto;
-import com.application.library.data.dto.UserSaveRequestDto;
+import com.application.library.data.dto.user.BaseUserSaveRequestDto;
+import com.application.library.data.dto.user.UserSaveRequestDto;
 import com.application.library.model.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,16 @@ public abstract class UserConverter {
     public abstract User toEntity(BaseUserSaveRequestDto dto);
 
     @Mapping(source = "dto.password", target = "password", qualifiedByName = "encodePassword")
+    @Mapping(source = "dto.roles", target = "authorities")
     public abstract User toEntity(UserSaveRequestDto dto);
+
+    @Mapping(source = "dto.password", target = "password", qualifiedByName = "encodePassword")
+    @Mapping(source = "dto.roles", target = "authorities")
+    public abstract User updateEntity(UserSaveRequestDto dto, @MappingTarget User user);
+
+
+    @Mapping(source = "dto.password", target = "password", qualifiedByName = "encodePassword")
+    public abstract User updateEntity(BaseUserSaveRequestDto dto, @MappingTarget User user);
 
 
     @Named("encodePassword")
