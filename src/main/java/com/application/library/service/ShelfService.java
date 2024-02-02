@@ -5,8 +5,10 @@ import com.application.library.converter.ShelfConverter;
 import com.application.library.data.dto.SaveShelfRequestDto;
 import com.application.library.data.view.ShelfBaseView;
 import com.application.library.data.view.ShelfView;
+import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.exception.IllegalDeleteOperationException;
+import com.application.library.exception.ShelfFullException;
 import com.application.library.listener.event.UpdateShelfAvailableCapacityEvent;
 import com.application.library.model.Shelf;
 import com.application.library.repository.ShelfRepository;
@@ -32,6 +34,8 @@ public class ShelfService {
 
     @Transactional
     public Shelf saveShelf(SaveShelfRequestDto requestDto) {
+        if (existsByName(requestDto.getName())) throw new EntityAlreadyExistsException("Shelf with this name already exists");
+
         Shelf shelf = shelfConverter.toEntity(requestDto);
         shelf.setAvailableCapacity(shelf.getCapacity());
         return ShelfRepository.save(shelf);
@@ -50,10 +54,7 @@ public class ShelfService {
     @Transactional
     public Long deleteShelf(Long id) {
         Shelf shelf = findById(id);
-
-        if (!shelf.getBooks().isEmpty()) {
-            throw new IllegalDeleteOperationException("Shelf has books, can nat be deleted");
-        }
+        if (!shelf.getBooks().isEmpty()) throw new IllegalDeleteOperationException("Shelf is not empty, Cannot delete.");
 
         ShelfRepository.delete(shelf);
         return id;
@@ -77,13 +78,17 @@ public class ShelfService {
 
     public void checkShelfCapacity(Shelf shelf) {
         if (shelf.getAvailableCapacity() <= 0) {
-            throw new EntityNotFoundException("Shelf is full");
+            throw new ShelfFullException("Shelf is full");
         }
     }
 
     public void checkShelfCapacity(Shelf shelf, int newCapacity) {
         if (shelf.getBooks().size() > newCapacity) {
-            throw new EntityNotFoundException("Shelf will be full");
+            throw new ShelfFullException("Shelf will be full");
         }
+    }
+
+    private boolean existsByName(String name) {
+        return ShelfRepository.existsByName(name);
     }
 }

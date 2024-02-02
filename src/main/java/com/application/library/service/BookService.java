@@ -4,6 +4,7 @@ import com.application.library.converter.BookConverter;
 import com.application.library.data.dto.CreateBookRequestDto;
 import com.application.library.data.dto.SaveBookRequestDto;
 import com.application.library.data.view.BookView;
+import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.listener.event.UpdateShelfAvailableCapacityEvent;
 import com.application.library.model.Book;
@@ -35,6 +36,8 @@ public class BookService {
 
     @Transactional
     public Book saveBook(CreateBookRequestDto requestDto) {
+        if (existsByIsbn(requestDto.getIsbn())) throw new EntityAlreadyExistsException("Book with this ISBN already exists");
+
         Book book = bookConverter.toEntity(requestDto);
         shelfService.checkShelfCapacity(book.getShelf());
         applicationEventPublisher.publishEvent(new UpdateShelfAvailableCapacityEvent(this, book.getShelf().getId()));
@@ -86,6 +89,10 @@ public class BookService {
         return sortParam.isPresent() && direction.isPresent() ?
                 PageRequest.of(page, size, direction.get(), sortParam.get()) :
                 PageRequest.of(page, size, Sort.Direction.ASC, "name");
+    }
+
+    private boolean existsByIsbn(String isbn) {
+        return bookRepository.existsByIsbn(isbn);
     }
 
 

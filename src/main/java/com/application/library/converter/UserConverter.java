@@ -1,5 +1,6 @@
 package com.application.library.converter;
 
+import com.application.library.data.dto.user.BaseUserDto;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
 import com.application.library.model.User;
@@ -33,6 +34,8 @@ public abstract class UserConverter {
 
     @Mapping(source = "dto.password", target = "password", qualifiedByName = "encodePassword")
     public abstract User updateEntity(BaseUserSaveRequestDto dto, @MappingTarget User user);
+
+    public abstract BaseUserDto toBaseDto(User user);
 
 
     @Named("encodePassword")

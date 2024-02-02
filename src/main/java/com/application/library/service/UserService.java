@@ -5,6 +5,7 @@ import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
+import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.helper.AuthHelper;
 import com.application.library.model.User;
@@ -32,6 +33,8 @@ public class UserService {
 
     @Transactional
     public User saveBaseUser(BaseUserSaveRequestDto requestDto) {
+        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException("User with this email already exists");
+
         User user = userConverter.toEntity(requestDto);
         user.setAuthorities(Set.of(UserRole.ROLE_USER));
         return userRepository.save(user);
@@ -39,6 +42,7 @@ public class UserService {
 
     @Transactional
     public User saveUser(UserSaveRequestDto requestDto) {
+        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException("User with this email already exists");
         return userRepository.save(userConverter.toEntity(requestDto));
     }
 
@@ -65,7 +69,7 @@ public class UserService {
 
         if (!AuthHelper.isUserAdmin()
                 && deleteUser.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(UserRole.ROLE_LIBRARIAN.name()))) {
-                throw new AccessDeniedException("You do not have permission to delete this user!");
+                throw new AccessDeniedException("You are not authorized to delete librarian");
         }
 
         userRepository.delete(deleteUser);
@@ -95,6 +99,10 @@ public class UserService {
         return sortParam.isPresent() && direction.isPresent() ?
                 PageRequest.of(page, size, direction.get(), sortParam.get()) :
                 PageRequest.of(page, size, Sort.Direction.ASC, "firstName", "lastName");
+    }
+
+    private boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 }

@@ -18,7 +18,7 @@ public class Book extends IntegerSoftDeleteEntity {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "isbn", nullable = false)
+    @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
 
     @Column(name = "page_count", nullable = false)
