@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 
 @MappedSuperclass
-public abstract class IntegerSoftDeleteEntity extends BaseIntegerEntity {
+public abstract class IntegerSoftDeleteEntity extends IntegerEntity {
 
     @Column(name = "deleted_date_time")
     private LocalDateTime deletedDateTime;

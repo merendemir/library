@@ -1,6 +1,6 @@
 package com.application.library.model;
 
-import com.application.library.core.model.BaseIntegerEntity;
+import com.application.library.core.model.IntegerEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity(name = "shelf")
 @Table(name = "shelf")
-public class Shelf extends BaseIntegerEntity {
+public class Shelf extends IntegerEntity {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

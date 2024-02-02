@@ -39,11 +39,14 @@ public class Book extends IntegerSoftDeleteEntity {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Column(name = "total_count", nullable = false)
+    private int totalCount;
+
     @Column(name = "available_count", nullable = false)
-    private Integer availableCount;
+    private int availableCount;
 
     @Column(name = "is_available", nullable = false)
-    private Boolean isAvailable;
+    private boolean isAvailable;
 
     @ManyToOne
     @JoinColumn(name = "shelf_id", nullable = false)
@@ -121,15 +124,15 @@ public class Book extends IntegerSoftDeleteEntity {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getAvailableCount() {
+    public int getAvailableCount() {
         return availableCount;
     }
 
-    public void setAvailableCount(Integer availableCount) {
+    public void setAvailableCount(int availableCount) {
         this.availableCount = availableCount;
     }
 
-    public Boolean getAvailable() {
+    public boolean isAvailable() {
         return isAvailable;
     }
 
@@ -143,5 +146,17 @@ public class Book extends IntegerSoftDeleteEntity {
 
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

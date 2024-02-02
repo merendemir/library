@@ -13,9 +13,6 @@ public class AuthHelper {
 
     public static User getActiveUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            return null;
-        }
         return (User) authentication.getPrincipal();
     }
 

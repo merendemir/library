@@ -10,8 +10,7 @@ public class SaveBookRequestDto {
     private String language;
     private String description;
     private String imageUrl;
-    private Integer availableCount;
-    private Boolean isAvailable;
+    private Integer totalCount;
 
     public String getName() {
         return name;
@@ -85,20 +84,11 @@ public class SaveBookRequestDto {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getAvailableCount() {
-        return availableCount;
+    public Integer getTotalCount() {
+        return totalCount;
     }
 
-    public void setAvailableCount(Integer availableCount) {
-        this.availableCount = availableCount;
+    public void setTotalCount(Integer totalCount) {
+        this.totalCount = totalCount;
     }
-
-    public Boolean getAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(Boolean available) {
-        isAvailable = available;
-    }
-
 }

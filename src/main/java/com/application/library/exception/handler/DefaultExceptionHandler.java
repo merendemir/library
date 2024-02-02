@@ -60,7 +60,12 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseHandler> handleEntityAlreadyExistsExceptionExceptions(EntityAlreadyExistsException exception) {
+    public ResponseEntity<ErrorResponseHandler> handleEntityAlreadyExistsExceptions(EntityAlreadyExistsException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseHandler(exception.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseHandler> handleIllegalStateExceptions(IllegalStateException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseHandler(exception.getMessage()));
     }
 

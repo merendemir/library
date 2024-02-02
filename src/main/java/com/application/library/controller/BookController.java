@@ -3,7 +3,7 @@ package com.application.library.controller;
 
 import com.application.library.data.dto.CreateBookRequestDto;
 import com.application.library.data.dto.SaveBookRequestDto;
-import com.application.library.data.view.BookView;
+import com.application.library.data.view.book.BookView;
 import com.application.library.service.BookService;
 import com.application.library.utils.ErrorResponseHandler;
 import com.application.library.utils.ResponseHandler;

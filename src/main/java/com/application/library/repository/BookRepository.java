@@ -1,7 +1,7 @@
 package com.application.library.repository;
 
 
-import com.application.library.data.view.BookView;
+import com.application.library.data.view.book.BookView;
 import com.application.library.model.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

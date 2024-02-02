@@ -3,13 +3,14 @@ package com.application.library.service;
 import com.application.library.converter.BookConverter;
 import com.application.library.data.dto.CreateBookRequestDto;
 import com.application.library.data.dto.SaveBookRequestDto;
-import com.application.library.data.view.BookView;
+import com.application.library.data.view.book.BookView;
 import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.listener.event.UpdateShelfAvailableCapacityEvent;
 import com.application.library.model.Book;
 import com.application.library.model.Shelf;
 import com.application.library.repository.BookRepository;
+import com.application.library.repository.LendTransactionRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,22 +26,29 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookConverter bookConverter;
     private final ShelfService shelfService;
+    private final LendTransactionRepository lendTransactionRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public BookService(BookRepository bookRepository, BookConverter bookConverter, ShelfService shelfService, ApplicationEventPublisher applicationEventPublisher) {
+    public BookService(BookRepository bookRepository, BookConverter bookConverter, ShelfService shelfService, LendTransactionRepository lendTransactionRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.bookRepository = bookRepository;
         this.bookConverter = bookConverter;
         this.shelfService = shelfService;
+        this.lendTransactionRepository = lendTransactionRepository;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
     public Book saveBook(CreateBookRequestDto requestDto) {
-        if (existsByIsbn(requestDto.getIsbn())) throw new EntityAlreadyExistsException("Book with this ISBN already exists");
+        if (existsByIsbn(requestDto.getIsbn()))
+            throw new EntityAlreadyExistsException("Book with this ISBN already exists");
 
         Book book = bookConverter.toEntity(requestDto);
         shelfService.checkShelfCapacity(book.getShelf());
         applicationEventPublisher.publishEvent(new UpdateShelfAvailableCapacityEvent(this, book.getShelf().getId()));
+
+        book.setAvailableCount(book.getTotalCount());
+        book.setAvailable(book.getAvailableCount() > 0);
+
         return bookRepository.save(book);
     }
 
@@ -62,7 +70,13 @@ public class BookService {
 
     @Transactional
     public Book updateBook(Long bookId, SaveBookRequestDto requestDto) {
-        return bookConverter.updateEntity(requestDto, findById(bookId));
+        Book book = findById(bookId);
+        int lendBookCount = lendTransactionRepository.countAllByBook_IdAndReturnedFalse(book.getId());
+
+        if (requestDto.getTotalCount() < lendBookCount)
+            throw new IllegalArgumentException("Total count cannot be less than lend book count");
+
+        return bookConverter.updateEntity(requestDto, book);
     }
 
     @Transactional(readOnly = true)

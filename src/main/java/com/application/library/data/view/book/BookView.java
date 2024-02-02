@@ -1,8 +1,9 @@
-package com.application.library.data.view;
+package com.application.library.data.view.book;
 
-import com.application.library.core.view.BaseIntegerEntityView;
+import com.application.library.core.view.IntegerEntityView;
+import com.application.library.data.view.ShelfBaseView;
 
-public interface BookView extends BaseIntegerEntityView {
+public interface BookView extends IntegerEntityView {
 
     String getName();
 
@@ -21,6 +22,8 @@ public interface BookView extends BaseIntegerEntityView {
     String getDescription();
 
     String getImageUrl();
+
+    Integer getTotalCount();
 
     Integer getAvailableCount();
 

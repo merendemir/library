@@ -1,8 +1,8 @@
 package com.application.library.data.view;
 
-import com.application.library.core.view.BaseIntegerEntityView;
+import com.application.library.core.view.IntegerEntityView;
 
-public interface UserView extends BaseIntegerEntityView {
+public interface UserView extends IntegerEntityView {
 
     String getFirstName();
 
