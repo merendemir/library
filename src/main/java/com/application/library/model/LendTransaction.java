@@ -23,7 +23,7 @@ public class LendTransaction extends UUIDEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "lend_date", nullable = false)
+    @Column(name = "dead_line_date", nullable = false)
     private LocalDate deadlineDate;
 
     @Column(name = "return_date")

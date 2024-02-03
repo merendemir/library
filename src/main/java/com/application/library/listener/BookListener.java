@@ -31,7 +31,6 @@ public class BookListener {
             int availableCount = book.getTotalCount() - lentCount;
 
             book.setAvailableCount(availableCount);
-            book.setAvailable(availableCount > 0);
 
             bookRepository.save(book);
         });

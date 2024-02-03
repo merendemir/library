@@ -3,8 +3,8 @@ package com.application.library.service;
 
 import com.application.library.converter.LendTransactionConverter;
 import com.application.library.data.dto.LendTransactionRequestDto;
-import com.application.library.data.view.LendTransactionAuthUserView;
-import com.application.library.data.view.LendTransactionView;
+import com.application.library.data.view.transaction.lend.LendTransactionAuthUserView;
+import com.application.library.data.view.transaction.lend.LendTransactionView;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.helper.AuthHelper;
 import com.application.library.listener.event.UpdateBookAvailableCountEvent;
@@ -27,11 +27,13 @@ public class LendTransactionService {
     private final LendTransactionRepository lendTransactionRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final LendTransactionConverter lendTransactionConverter;
+    private final SettingsService settingsService;
 
-    public LendTransactionService(LendTransactionRepository lendTransactionRepository, ApplicationEventPublisher applicationEventPublisher, LendTransactionConverter lendTransactionConverter) {
+    public LendTransactionService(LendTransactionRepository lendTransactionRepository, ApplicationEventPublisher applicationEventPublisher, LendTransactionConverter lendTransactionConverter, SettingsService settingsService) {
         this.lendTransactionRepository = lendTransactionRepository;
         this.applicationEventPublisher = applicationEventPublisher;
         this.lendTransactionConverter = lendTransactionConverter;
+        this.settingsService = settingsService;
     }
 
     @Transactional
@@ -105,7 +107,7 @@ public class LendTransactionService {
 
         if (deadlineDate.isEqual(now) || deadlineDate.isAfter(now)) return 0.0;
 
-        double lateFeePerDay = 0.5;
+        double lateFeePerDay = settingsService.getLateFeePerDay();
         long daysLate = now.toEpochDay() - deadlineDate.toEpochDay();
         double totalFee = lateFeePerDay * daysLate;
 

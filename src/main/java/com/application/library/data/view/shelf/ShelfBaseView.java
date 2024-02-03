@@ -1,4 +1,4 @@
-package com.application.library.data.view;
+package com.application.library.data.view.shelf;
 
 public interface ShelfBaseView {
     Long getId();

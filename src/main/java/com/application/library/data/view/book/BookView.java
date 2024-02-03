@@ -1,7 +1,7 @@
 package com.application.library.data.view.book;
 
 import com.application.library.core.view.IntegerEntityView;
-import com.application.library.data.view.ShelfBaseView;
+import com.application.library.data.view.shelf.ShelfBaseView;
 
 public interface BookView extends IntegerEntityView {
 
@@ -27,7 +27,9 @@ public interface BookView extends IntegerEntityView {
 
     Integer getAvailableCount();
 
-    Boolean getIsAvailable();
+    default Boolean getIsAvailable() {
+        return getAvailableCount() > 0;
+    }
 
     ShelfBaseView getShelf();
 }

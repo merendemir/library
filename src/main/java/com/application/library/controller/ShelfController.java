@@ -2,8 +2,8 @@ package com.application.library.controller;
 
 
 import com.application.library.data.dto.SaveShelfRequestDto;
-import com.application.library.data.view.ShelfBaseView;
-import com.application.library.data.view.ShelfView;
+import com.application.library.data.view.shelf.ShelfBaseView;
+import com.application.library.data.view.shelf.ShelfView;
 import com.application.library.service.ShelfService;
 import com.application.library.utils.ErrorResponseHandler;
 import com.application.library.utils.ResponseHandler;

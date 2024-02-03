@@ -1,6 +1,7 @@
-package com.application.library.data.view;
+package com.application.library.data.view.transaction.lend;
 
 import com.application.library.core.view.UUIDEntityView;
+import com.application.library.data.view.UserView;
 import com.application.library.data.view.book.BaseBookView;
 
 import java.time.LocalDate;

@@ -47,7 +47,6 @@ public class BookService {
         applicationEventPublisher.publishEvent(new UpdateShelfAvailableCapacityEvent(this, book.getShelf().getId()));
 
         book.setAvailableCount(book.getTotalCount());
-        book.setAvailable(book.getAvailableCount() > 0);
 
         return bookRepository.save(book);
     }

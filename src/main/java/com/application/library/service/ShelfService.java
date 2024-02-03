@@ -3,8 +3,8 @@ package com.application.library.service;
 
 import com.application.library.converter.ShelfConverter;
 import com.application.library.data.dto.SaveShelfRequestDto;
-import com.application.library.data.view.ShelfBaseView;
-import com.application.library.data.view.ShelfView;
+import com.application.library.data.view.shelf.ShelfBaseView;
+import com.application.library.data.view.shelf.ShelfView;
 import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.exception.IllegalDeleteOperationException;

@@ -1,4 +1,4 @@
-package com.application.library.data.view;
+package com.application.library.data.view.shelf;
 
 import com.application.library.data.view.book.BookView;
 

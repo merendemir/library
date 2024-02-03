@@ -2,8 +2,8 @@ package com.application.library.controller;
 
 
 import com.application.library.data.dto.LendTransactionRequestDto;
-import com.application.library.data.view.LendTransactionAuthUserView;
-import com.application.library.data.view.LendTransactionView;
+import com.application.library.data.view.transaction.lend.LendTransactionAuthUserView;
+import com.application.library.data.view.transaction.lend.LendTransactionView;
 import com.application.library.service.LendTransactionService;
 import com.application.library.utils.ErrorResponseHandler;
 import com.application.library.utils.ResponseHandler;
@@ -116,7 +116,7 @@ public class LendTransactionController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(lendTransactionService.findLendTransactionsForAuthUser(page, size)));
     }
 
-    @Operation(summary = "Find lend transactions by user id", description = "Find lend transactions by user id",
+    @Operation(summary = "Find lend transactions by user id", description = "Find lend transactions by user id, Requires ADMIN or LIBRARIAN role.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -124,11 +124,12 @@ public class LendTransactionController {
                     )
             })
     @GetMapping("/user/{id}")
+    @RolesAllowed({"ADMIN", "LIBRARIAN"})
     public ResponseEntity<ResponseHandler<Page<LendTransactionAuthUserView>>> findLendTransactionsByUserId(@PathVariable Long id, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(lendTransactionService.findLendTransactionsByUserId(id, page, size)));
     }
 
-    @Operation(summary = "Find lend transactions by returned", description = "Find lend transactions by returned",
+    @Operation(summary = "Find lend transactions by returned", description = "Find lend transactions by returned. Requires ADMIN or LIBRARIAN role.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
