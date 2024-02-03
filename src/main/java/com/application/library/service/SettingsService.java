@@ -44,4 +44,27 @@ public class SettingsService {
         return settingsRepository.save(settings);
     }
 
+    @CacheEvict(value = CachingConfig.LEND_DAY, allEntries = true)
+    @Transactional
+    public Settings setLendDay(int lendDay) {
+        Optional<Settings> optionalSettings = settingsRepository.findById(SettingsKey.LEND_DAY);
+        Settings settings;
+        if (optionalSettings.isPresent()) {
+            settings = optionalSettings.get();
+        } else {
+            settings = new Settings();
+            settings.setSettingsKey(SettingsKey.LEND_DAY);
+        }
+
+        settings.setSettingsValue(String.valueOf(lendDay));
+        return settingsRepository.save(settings);
+    }
+
+    @Cacheable(value = CachingConfig.LATE_FEE_PER_DAY)
+    @Transactional(readOnly = true)
+    public int getLendDay() {
+        Optional<Settings> lateFeePerDaySettings = settingsRepository.findById(SettingsKey.LEND_DAY);
+        return lateFeePerDaySettings.map(settings -> Integer.parseInt(settings.getSettingsValue())).orElse(14);
+    }
+
 }

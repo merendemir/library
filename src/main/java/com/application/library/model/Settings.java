@@ -1,10 +1,7 @@
 package com.application.library.model;
 
 import com.application.library.enumerations.SettingsKey;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 
 @Entity(name = "settings")
@@ -14,6 +11,7 @@ public class Settings {
 
     @Id
     @Column(name = "settings_key", nullable = false)
+    @Enumerated(EnumType.STRING)
     private SettingsKey settingsKey;
 
     @Column(name = "settings_value")

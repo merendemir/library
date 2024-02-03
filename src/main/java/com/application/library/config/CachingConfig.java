@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @EnableCaching
 public class CachingConfig {
     public static final String LATE_FEE_PER_DAY = "late-fee-per-day";
+    public static final String LEND_DAY = "lend_day";
 
     @Bean
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager(
-                LATE_FEE_PER_DAY
+                LATE_FEE_PER_DAY,
+                LEND_DAY
         );
     }
 }

@@ -8,6 +8,7 @@ import com.application.library.model.LendTransaction;
 import com.application.library.model.User;
 import com.application.library.repository.LendTransactionRepository;
 import com.application.library.service.BookService;
+import com.application.library.service.SettingsService;
 import com.application.library.service.UserService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public abstract class LendTransactionConverter {
 
     @Autowired
     private LendTransactionRepository lendTransactionRepository;
+
+    @Autowired
+    private SettingsService settingsService;
 
     @Mapping(target = "book", source = "dto.bookId", qualifiedByName = "idToBook")
     @Mapping(target = "user", source = "dto.userId", qualifiedByName = "idToUser")
@@ -61,7 +65,7 @@ public abstract class LendTransactionConverter {
 
     @Named("setDeadlineDate")
     LocalDate setDeadlineDate(Long id) {
-        return LocalDate.now().plusDays(14);
+        return LocalDate.now().plusDays(settingsService.getLendDay());
     }
 
 }
