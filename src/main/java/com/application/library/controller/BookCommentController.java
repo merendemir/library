@@ -72,6 +72,7 @@ public class BookCommentController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(bookCommentService.getBookCommentStats(bookId)));
     }
 
+
     @Operation(
             summary = "Update a comment",
             description = "Update a comment by providing the comment ID and the new information.",
@@ -79,6 +80,11 @@ public class BookCommentController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Comment updated successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "You are not authorized to update this comment",
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
     @PutMapping("/{commentId}")
@@ -94,6 +100,11 @@ public class BookCommentController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Comment deleted successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "You are not authorized to delete this comment",
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
     @DeleteMapping("/{commentId}")

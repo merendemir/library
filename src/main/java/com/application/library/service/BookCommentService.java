@@ -5,13 +5,17 @@ import com.application.library.data.dto.BookCommentDto;
 import com.application.library.data.dto.BookCommentRequestDto;
 import com.application.library.data.view.BookCommentStatsView;
 import com.application.library.exception.EntityNotFoundException;
+import com.application.library.helper.AuthHelper;
 import com.application.library.model.BookComment;
 import com.application.library.repository.BookCommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class BookCommentService {
@@ -31,12 +35,20 @@ public class BookCommentService {
 
     @Transactional
     public BookComment updateComment(Long commentId, BookCommentRequestDto requestDto) {
-        return bookCommentConverter.updateEntity(requestDto, findById(commentId));
+        BookComment bookComment = findById(commentId);
+        if (!Objects.equals(bookComment.getUser().getId(), AuthHelper.getActiveUser().getId()))
+            throw new AccessDeniedException("You are not authorized to update this comment");
+
+        return bookCommentConverter.updateEntity(requestDto, bookComment);
     }
 
     @Transactional
     public Long deleteComment(Long commentId) {
-        bookCommentRepository.delete(findById(commentId));
+        BookComment bookComment = findById(commentId);
+        if (!Objects.equals(bookComment.getUser().getId(), AuthHelper.getActiveUser().getId()))
+            throw new AccessDeniedException("You are not authorized to delete this comment");
+
+        bookCommentRepository.delete(bookComment);
         return commentId;
     }
 
