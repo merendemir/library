@@ -6,6 +6,7 @@ import com.application.library.helper.AuthHelper;
 import com.application.library.model.Book;
 import com.application.library.model.LendTransaction;
 import com.application.library.model.User;
+import com.application.library.repository.BookReservationRepository;
 import com.application.library.repository.LendTransactionRepository;
 import com.application.library.service.BookService;
 import com.application.library.service.SettingsService;
@@ -35,6 +36,9 @@ public abstract class LendTransactionConverter {
     @Autowired
     private SettingsService settingsService;
 
+    @Autowired
+    private BookReservationRepository bookReservationRepository;
+
     @Mapping(target = "book", source = "dto.bookId", qualifiedByName = "idToBook")
     @Mapping(target = "user", source = "dto.userId", qualifiedByName = "idToUser")
     @Mapping(target = "lender", source = "dto.bookId", qualifiedByName = "setLender")
@@ -46,6 +50,11 @@ public abstract class LendTransactionConverter {
         if (id == null) return null;
         Book book = bookService.findById(id);
         if (!book.isAvailable()) throw new EntityAlreadyExistsException("Book is not available for lending");
+
+        long reservedCount = bookReservationRepository.countByBook_IdAndReservationDateBeforeAndCompletedFalse(id, LocalDate.now().plusDays(settingsService.getLendDay()));
+        if (reservedCount >= book.getAvailableCount())
+            throw new EntityAlreadyExistsException("Book has a reservation");
+
         return book;
     }
 

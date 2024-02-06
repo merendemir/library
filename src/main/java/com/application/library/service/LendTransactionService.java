@@ -8,6 +8,7 @@ import com.application.library.data.view.transaction.lend.LendTransactionView;
 import com.application.library.exception.EntityNotFoundException;
 import com.application.library.helper.AuthHelper;
 import com.application.library.listener.event.UpdateBookAvailableCountEvent;
+import com.application.library.listener.event.UpdateUserReservationCompleteStatus;
 import com.application.library.model.LendTransaction;
 import com.application.library.repository.LendTransactionRepository;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,6 +41,7 @@ public class LendTransactionService {
     public LendTransaction lendBook(LendTransactionRequestDto requestDto) {
         LendTransaction lendTransaction = lendTransactionRepository.save(lendTransactionConverter.toEntity(requestDto));
         applicationEventPublisher.publishEvent(new UpdateBookAvailableCountEvent(this, lendTransaction.getBook().getId()));
+        applicationEventPublisher.publishEvent(new UpdateUserReservationCompleteStatus(this, lendTransaction.getBook().getId(), lendTransaction.getUser().getId()));
         return lendTransaction;
     }
 
@@ -115,5 +117,9 @@ public class LendTransactionService {
         return totalFee - lateFeePaid;
     }
 
+    @Transactional(readOnly = true)
+    public long countByBookIdAndReturnedAndDeadlineDateAfter(Long bookId, boolean returned, LocalDate date) {
+        return lendTransactionRepository.countByBook_IdAndReturnedAndDeadlineDateBefore(bookId, returned, date);
+    }
 
 }

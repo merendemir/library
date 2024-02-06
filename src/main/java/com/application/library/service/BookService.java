@@ -97,7 +97,6 @@ public class BookService {
         return book;
     }
 
-
     private PageRequest getPageRequest(int page, int size, Optional<String> sortParam, Optional<Sort.Direction> direction) {
         return sortParam.isPresent() && direction.isPresent() ?
                 PageRequest.of(page, size, direction.get(), sortParam.get()) :
