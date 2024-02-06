@@ -130,7 +130,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(userService.updateUser(id, requestDto).getId()));
     }
 
-    @Operation(summary = "Update active user information", description = "Update information for the currently authenticated user. Requires ADMIN or LIBRARIAN role.")
+    @Operation(summary = "Update active user information", description = "Update information for the currently authenticated user.")
     @PutMapping("/active")
     public ResponseEntity<ResponseHandler<Long>> updateActiveUserInfo(@RequestBody BaseUserSaveRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(userService.updateActiveUserInfo(requestDto).getId()));

@@ -6,6 +6,7 @@ import com.application.library.data.dto.user.LoginRequestDto;
 import com.application.library.data.dto.user.LoginResponseDto;
 import com.application.library.service.AuthService;
 import com.application.library.service.UserService;
+import com.application.library.utils.ErrorResponseHandler;
 import com.application.library.utils.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,10 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,7 +39,7 @@ public class AuthController {
                     @ApiResponse(
                             responseCode = "409",
                             description = "User with this email already exists",
-                            content = @Content(schema = @Schema(implementation = ResponseHandler.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
     @PostMapping("/register")
