@@ -1,5 +1,7 @@
 package com.application.library.data.dto.user;
 
+import java.util.Objects;
+
 public class LoginResponseDto {
     private String authorizationToken;
 
@@ -27,5 +29,18 @@ public class LoginResponseDto {
 
     public void setUser(BaseUserDto user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoginResponseDto that = (LoginResponseDto) o;
+        return Objects.equals(authorizationToken, that.authorizationToken) && Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authorizationToken, user);
     }
 }
