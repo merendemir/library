@@ -37,6 +37,11 @@ public class LendTransactionService {
         this.settingsService = settingsService;
     }
 
+    @Transactional(readOnly = true)
+    public LendTransaction findById(UUID id) {
+        return lendTransactionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Lend transaction not found"));
+    }
+
     @Transactional
     public LendTransaction lendBook(LendTransactionRequestDto requestDto) {
         LendTransaction lendTransaction = lendTransactionRepository.save(lendTransactionConverter.toEntity(requestDto));
@@ -62,10 +67,6 @@ public class LendTransactionService {
         return lendTransaction;
     }
 
-    @Transactional(readOnly = true)
-    public LendTransaction findById(UUID id) {
-        return lendTransactionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Lend transaction not found"));
-    }
 
     @Transactional
     public LendTransaction payLateFee(UUID id) {

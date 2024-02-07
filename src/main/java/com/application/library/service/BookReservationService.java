@@ -48,7 +48,7 @@ public class BookReservationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookReservationView> getAuthenticUserReservations(int page, int size) {
+    public Page<BookReservationView> getAuthenticationUserReservations(int page, int size) {
         User user = AuthHelper.getActiveUser();
         return bookReservationRepository.findByUser_Id(user.getId(), PageRequest.of(page, size));
     }

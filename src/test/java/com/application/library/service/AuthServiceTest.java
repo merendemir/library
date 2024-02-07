@@ -11,9 +11,11 @@ import com.application.library.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +50,7 @@ class AuthServiceTest extends TestSupport {
         LoginRequestDto loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail(testUser.getEmail());
         loginRequestDto.setPassword(testUser.getPassword());
-        Authentication testAuthenticationByRole = getTestAuthentication();
+        Authentication testAuthenticationByRole = getTestAuthentication(true);
 
         // when
         when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -67,5 +69,25 @@ class AuthServiceTest extends TestSupport {
 
         verify(jwtUtil, times(1)).generateToken(testUser.getEmail());
         verify(userConverter, times(1)).toBaseDto(testUser);
+    }
+
+    @Test
+    void login_whenLoginCalledWithWrongCredentials_shouldThrowAuthenticationServiceException() {
+        // given
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setEmail("test");
+        loginRequestDto.setPassword("test");
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        Authentication testAuthentication = getTestAuthentication(false);
+
+        // when
+        when(authenticationManager.authenticate(authentication)).thenReturn(testAuthentication);
+
+        // then
+        assertThatThrownBy(() -> authService.login(loginRequestDto))
+                .isInstanceOf(AuthenticationServiceException.class);
+
+        verify(authenticationManager, times(1)).authenticate(authentication);
     }
 }

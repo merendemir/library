@@ -70,7 +70,7 @@ public class BookReservationController {
     )
     @GetMapping
     public ResponseEntity<ResponseHandler<Page<BookReservationView>>> getAuthenticUserReservations(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(new ResponseHandler<>(bookReservationService.getAuthenticUserReservations(page, size)));
+        return ResponseEntity.ok(new ResponseHandler<>(bookReservationService.getAuthenticationUserReservations(page, size)));
     }
 
     @Operation(

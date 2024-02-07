@@ -11,12 +11,15 @@ import com.application.library.helper.AuthHelper;
 import com.application.library.model.User;
 import com.application.library.repository.UserRepository;
 import com.application.library.support.TestSupport;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
@@ -34,9 +37,16 @@ class UserServiceTest extends TestSupport {
     private UserConverter userConverter;
     private UserService userService;
 
+    private static MockedStatic<AuthHelper> authHelperMockedStatic;
+
     @BeforeAll
     static void beforeAll() {
-        mockStatic(AuthHelper.class);
+        authHelperMockedStatic = mockStatic(AuthHelper.class);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        authHelperMockedStatic.close();
     }
 
     @BeforeEach
@@ -94,35 +104,35 @@ class UserServiceTest extends TestSupport {
     void testSaveUser_whenSaveUserCalledWithUserSaveRequestDto_shouldReturnUser() {
         // given
         User expectedResult = getTestUser();
-        BaseUserSaveRequestDto baseUserSaveRequestDto = new BaseUserSaveRequestDto();
-        baseUserSaveRequestDto.setEmail(expectedResult.getEmail());
-        baseUserSaveRequestDto.setFirstName(expectedResult.getFirstName());
-        baseUserSaveRequestDto.setLastName(expectedResult.getLastName());
-        baseUserSaveRequestDto.setPassword(expectedResult.getPassword());
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto();
+        userSaveRequestDto.setEmail(expectedResult.getEmail());
+        userSaveRequestDto.setFirstName(expectedResult.getFirstName());
+        userSaveRequestDto.setLastName(expectedResult.getLastName());
+        userSaveRequestDto.setPassword(expectedResult.getPassword());
 
         // when
         when(userRepository.save(any(User.class))).thenReturn(expectedResult);
-        when(userConverter.toEntity(baseUserSaveRequestDto)).thenReturn(expectedResult);
+        when(userConverter.toEntity(userSaveRequestDto)).thenReturn(expectedResult);
 
         // then
-        User result = userService.saveBaseUser(baseUserSaveRequestDto);
+        User result = userService.saveUser(userSaveRequestDto);
 
         assertEquals(expectedResult, result);
 
         verify(userRepository, times(1)).save(any(User.class));
-        verify(userConverter, times(1)).toEntity(baseUserSaveRequestDto);
+        verify(userConverter, times(1)).toEntity(userSaveRequestDto);
     }
 
     @Test
     void testSaveUser_whenSaveUserCalledWithExistsEmail_shouldThrowEntityAlreadyExistsException() {
         // given
-        BaseUserSaveRequestDto requestDto = new BaseUserSaveRequestDto();
+        UserSaveRequestDto requestDto = new UserSaveRequestDto();
         requestDto.setEmail("test_email");
 
         when(userRepository.existsByEmail(requestDto.getEmail())).thenReturn(true);
 
         // then
-        assertThatThrownBy(() -> userService.saveBaseUser(requestDto))
+        assertThatThrownBy(() -> userService.saveUser(requestDto))
                 .isInstanceOf(EntityAlreadyExistsException.class)
                 .hasMessage("User with this email already exists");
 
@@ -181,6 +191,24 @@ class UserServiceTest extends TestSupport {
         assertEquals(expected, result);
 
         verify(userRepository, times(1)).getAllBy(any(PageRequest.class));
+    }
+
+    @Test
+    void testGetAllUsersByActiveUserAuthority_whenUserIsAdminAndUserTypePresent_shouldReturnAllUsers() {
+        // given
+        int page = 0;
+        int size = 10;
+        Page<UserView> expected = new PageImpl<>(List.of(getTestUserView()));
+
+        when(userRepository.findAllByAuthorities(any(UserRole.class), any())).thenReturn(expected);
+        when(AuthHelper.isUserAdmin()).thenReturn(true);
+
+        // then
+        Page<UserView> result = userService.getAllUsersByActiveUserAuthority(Optional.of(UserRole.ROLE_USER), page, size, Optional.of("firstName"), Optional.of(Sort.Direction.ASC));
+
+        assertEquals(expected, result);
+
+        verify(userRepository, times(1)).findAllByAuthorities(any(UserRole.class), any(PageRequest.class));
     }
 
     @Test
@@ -333,19 +361,18 @@ class UserServiceTest extends TestSupport {
     void testUpdateActiveUser_whenUserExists_shouldReturnUpdatedUser() {
         // given
         User user = getTestUser();
-        UserSaveRequestDto requestDto = new UserSaveRequestDto();
+        BaseUserSaveRequestDto requestDto = new BaseUserSaveRequestDto();
         requestDto.setEmail("new_email");
 
         // when
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(AuthHelper.getActiveUser()).thenReturn(user);
         when(userConverter.updateEntity(requestDto, user)).thenReturn(user);
 
         // then
-        User result = userService.updateUser(user.getId(), requestDto);
+        User result = userService.updateActiveUserInfo(requestDto);
 
         assertEquals(user, result);
 
-        verify(userRepository, times(1)).findById(user.getId());
         verify(userConverter, times(1)).updateEntity(requestDto, user);
     }
 
