@@ -1,6 +1,8 @@
 package com.application.library.support;
 
+import com.application.library.data.dto.BookCommentRequestDto;
 import com.application.library.data.dto.user.BaseUserDto;
+import com.application.library.data.view.BookReservationView;
 import com.application.library.data.view.ReadingListView;
 import com.application.library.data.view.UserView;
 import com.application.library.data.view.book.BaseBookView;
@@ -31,8 +33,25 @@ public class TestSupport {
         }
     }
 
+    class testUser2 extends User {
+        @Override
+        public Long getId() {
+            return 2L;
+        }
+    }
+
     public User getTestUser() {
         User user = new testUser();
+        user.setFirstName("test_first_name");
+        user.setLastName("test_last_name");
+        user.setEmail("test_email");
+        user.setPassword("test_password");
+        user.setAuthorities(Set.of(UserRole.ROLE_USER));
+        return user;
+    }
+
+    public User getTestUser2() {
+        User user = new testUser2();
         user.setFirstName("test_first_name");
         user.setLastName("test_last_name");
         user.setEmail("test_email");
@@ -441,6 +460,73 @@ public class TestSupport {
             @Override
             public UserView getLender() {
                 return null;
+            }
+        };
+    }
+
+    public BookCommentRequestDto getBookCommentRequestDto() {
+        BookCommentRequestDto bookCommentRequestDto = new BookCommentRequestDto();
+        bookCommentRequestDto.setCommentText("test_comment_text");
+        bookCommentRequestDto.setRating(5.0);
+        return bookCommentRequestDto;
+    }
+
+    class testBookComment extends BookComment {
+        @Override
+        public Long getId() {
+            return 1L;
+        }
+    }
+
+    public BookComment getTestBookComment() {
+        BookComment bookComment = new testBookComment();
+        bookComment.setUser(getTestUser());
+        bookComment.setBook(getTestBook());
+        bookComment.setCommentText("test_comment_text");
+        bookComment.setRating(5.0);
+        return bookComment;
+    }
+
+    public BookReservationView getBookReservationView() {
+        BookReservation bookReservation = new BookReservation();
+        bookReservation.setUser(getTestUser());
+        bookReservation.setBook(getTestBook());
+        bookReservation.setReservationDate(LocalDate.now());
+        return new BookReservationView() {
+            @Override
+            public LocalDateTime getCreatedAt() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getUpdatedAt() {
+                return null;
+            }
+
+            @Override
+            public Long getId() {
+                return bookReservation.getId();
+            }
+
+            @Override
+            public LocalDate getReservationDate() {
+                return bookReservation.getReservationDate();
+            }
+
+            @Override
+            public UserView getUser() {
+                return getTestUserView();
+            }
+
+            @Override
+            public BookView getBooks() {
+                return null;
+            }
+
+
+            @Override
+            public boolean isCompleted() {
+                return false;
             }
         };
     }

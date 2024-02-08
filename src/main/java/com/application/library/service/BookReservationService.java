@@ -3,6 +3,7 @@ package com.application.library.service;
 import com.application.library.data.dto.BookReservationRequestDto;
 import com.application.library.data.view.BookReservationView;
 import com.application.library.exception.EntityAlreadyExistsException;
+import com.application.library.exception.EntityNotFoundException;
 import com.application.library.helper.AuthHelper;
 import com.application.library.model.Book;
 import com.application.library.model.BookReservation;
@@ -21,12 +22,12 @@ public class BookReservationService {
 
     private final BookReservationRepository bookReservationRepository;
     private final BookService bookService;
-    private final LendTransactionService lendTransaction;
+    private final LendTransactionService lendTransactionService;
 
     public BookReservationService(BookReservationRepository bookReservationRepository, BookService bookService, LendTransactionService lendTransactionService) {
         this.bookReservationRepository = bookReservationRepository;
         this.bookService = bookService;
-        this.lendTransaction = lendTransactionService;
+        this.lendTransactionService = lendTransactionService;
     }
 
     @Transactional
@@ -56,7 +57,7 @@ public class BookReservationService {
     @Transactional
     public BookReservation updateReservation(Long id, BookReservationRequestDto requestDto) {
         BookReservation bookReservation = bookReservationRepository.findById(id)
-                .orElseThrow(() -> new EntityAlreadyExistsException("Reservation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
 
         if (bookReservation.isCompleted()) throw new IllegalStateException("Reservation is already completed");
 
@@ -72,7 +73,7 @@ public class BookReservationService {
     @Transactional
     public BookReservation cancelReservation(Long id) {
         BookReservation bookReservation = bookReservationRepository.findById(id)
-                .orElseThrow(() -> new EntityAlreadyExistsException("Reservation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
 
         if (bookReservation.isCompleted()) throw new IllegalStateException("Reservation is already completed");
 
@@ -83,7 +84,7 @@ public class BookReservationService {
 
     private boolean isBookAvailableForDate(Book book, LocalDate date) {
         long totalAvailableCount = book.getAvailableCount()
-                + lendTransaction.countByBookIdAndReturnedAndDeadlineDateAfter(book.getId(), false, date)
+                + lendTransactionService.countByBookIdAndReturnedAndDeadlineDateAfter(book.getId(), false, date)
                 - bookReservationRepository.countByBook_IdAndReservationDateAfterAndCompletedFalse(book.getId(), date);
         return totalAvailableCount > 0;
     }
