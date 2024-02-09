@@ -52,7 +52,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(x -> x.authenticationEntryPoint(new AuthenticationEntryPointException()))
                 .build();
-
     }
 
     @Bean
