@@ -7,9 +7,9 @@ RUN chmod +x mvnw
 RUN ./mvnw dependency:resolve
 
 COPY src src
-RUN ./mvnw -Dspring.profiles.active=$PROFILE package
+RUN ./mvnw -Dspring.profiles.active=$PROFILE -DskipTests=true package
 
 FROM openjdk:17-jdk-slim
 WORKDIR library
 COPY --from=build target/*.jar library-application.jar
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=$PROFILE", "library-application.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=$PROFILE -DskipTests=true" , "library-application.jar"]
