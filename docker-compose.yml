@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  app:
+    image: 'library-application:latest'
+    build:
+      context: .
+    ports:
+      - "2703:2703"
+    networks:
+      - library-network
+networks:
+  library-network:
