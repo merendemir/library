@@ -47,7 +47,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseHandler<>(userService.saveBaseUser(requestDto).getId()));
     }
 
-
     @Operation(summary = "Login with user credentials", description = "Authenticate and login the user using the provided credentials.",
             responses = {
                     @ApiResponse(

@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  library-application:
+    image: merendemir/library-application:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 10s
+    ports:
+      - "2703:2703"
+    networks:
+      - library-network
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}"
+
+
+networks:
+  library-network:
+    name: library-network
+    external: true
