@@ -1,5 +1,6 @@
 package com.application.library.support;
 
+import com.application.library.data.dto.BookCommentDto;
 import com.application.library.data.dto.BookCommentRequestDto;
 import com.application.library.data.dto.user.BaseUserDto;
 import com.application.library.data.view.BookReservationView;
@@ -13,6 +14,7 @@ import com.application.library.data.view.transaction.lend.LendTransactionAuthUse
 import com.application.library.data.view.transaction.lend.LendTransactionView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,7 +42,7 @@ public class TestSupport {
         }
     }
 
-    public User getTestUser() {
+    protected User getTestUser() {
         User user = new testUser();
         user.setFirstName("test_first_name");
         user.setLastName("test_last_name");
@@ -50,7 +52,7 @@ public class TestSupport {
         return user;
     }
 
-    public User getTestUser2() {
+    protected User getTestUser2() {
         User user = new testUser2();
         user.setFirstName("test_first_name");
         user.setLastName("test_last_name");
@@ -60,7 +62,7 @@ public class TestSupport {
         return user;
     }
 
-    public BaseUserDto getBaseUserDto() {
+    protected BaseUserDto getBaseUserDto() {
         BaseUserDto baseUserDto = new BaseUserDto();
         baseUserDto.setId(1L);
         baseUserDto.setFirstName("test_first_name");
@@ -70,7 +72,7 @@ public class TestSupport {
         return baseUserDto;
     }
 
-    public Authentication getTestAuthentication(boolean authenticated) {
+    protected Authentication getTestAuthentication(boolean authenticated) {
         return new Authentication() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -109,7 +111,7 @@ public class TestSupport {
         };
     }
 
-    public UserView getTestUserView() {
+    protected UserView getTestUserView() {
         User testUser = getTestUser();
         return new UserView() {
             @Override
@@ -151,7 +153,7 @@ public class TestSupport {
             return 1L;
         }
     }
-    public Shelf getTestShelf() {
+    protected Shelf getTestShelf() {
         Shelf shelf = new testShelf();
         shelf.setName("test_shelf");
         shelf.setCapacity(10);
@@ -160,7 +162,7 @@ public class TestSupport {
         return shelf;
     }
 
-    public ShelfView getTestShelfView() {
+    protected ShelfView getTestShelfView() {
         Shelf testShelf = getTestShelf();
         return new ShelfView() {
             @Override
@@ -190,7 +192,7 @@ public class TestSupport {
         };
     }
 
-    public ShelfBaseView getTestShelfBaseView() {
+    protected ShelfBaseView getTestShelfBaseView() {
         Shelf testShelf = getTestShelf();
         return new ShelfBaseView() {
             @Override
@@ -223,7 +225,7 @@ public class TestSupport {
         }
     }
 
-    public Book getTestBook() {
+    protected Book getTestBook() {
         Book book = new testBook();
         book.setName("test_name");
         book.setAuthor("test_author");
@@ -232,7 +234,7 @@ public class TestSupport {
         return book;
     }
 
-    public BookView getTestBookView() {
+    protected BookView getTestBookView() {
         Book testBook = getTestBook();
         return new BookView() {
             @Override
@@ -319,14 +321,14 @@ public class TestSupport {
         }
     }
 
-    public ReadingList getTestReadingList() {
+    protected ReadingList getTestReadingList() {
         ReadingList readingList = new ReadingList();
         readingList.setUser(getTestUser());
         readingList.setBooks(new HashSet<>());
         return readingList;
     }
 
-    public ReadingListView getReadingListView() {
+    protected ReadingListView getReadingListView() {
         ReadingList testReadingList = getTestReadingList();
         return new ReadingListView() {
             @Override
@@ -356,7 +358,7 @@ public class TestSupport {
         };
     }
 
-    public LendTransaction getTestLendTransaction(boolean returned) {
+    protected LendTransaction getTestLendTransaction(boolean returned) {
         LendTransaction lendTransaction = new LendTransaction();
         lendTransaction.setUser(getTestUser());
         lendTransaction.setBook(getTestBook());
@@ -364,7 +366,7 @@ public class TestSupport {
         return lendTransaction;
     }
 
-    public LendTransactionAuthUserView LendTransactionAuthUserView(boolean returned) {
+    protected LendTransactionAuthUserView LendTransactionAuthUserView(boolean returned) {
         LendTransaction testLendTransaction = getTestLendTransaction(returned);
         return new LendTransactionAuthUserView() {
             @Override
@@ -409,7 +411,7 @@ public class TestSupport {
         };
     }
 
-    public LendTransactionView getLendTransactionView(boolean returned) {
+    protected LendTransactionView getLendTransactionView(boolean returned) {
         LendTransaction testLendTransaction = getTestLendTransaction(returned);
         return new LendTransactionView() {
             @Override
@@ -464,7 +466,7 @@ public class TestSupport {
         };
     }
 
-    public BookCommentRequestDto getBookCommentRequestDto() {
+    protected BookCommentRequestDto getBookCommentRequestDto() {
         BookCommentRequestDto bookCommentRequestDto = new BookCommentRequestDto();
         bookCommentRequestDto.setCommentText("test_comment_text");
         bookCommentRequestDto.setRating(5.0);
@@ -478,7 +480,7 @@ public class TestSupport {
         }
     }
 
-    public BookComment getTestBookComment() {
+    protected BookComment getTestBookComment() {
         BookComment bookComment = new testBookComment();
         bookComment.setUser(getTestUser());
         bookComment.setBook(getTestBook());
@@ -487,7 +489,7 @@ public class TestSupport {
         return bookComment;
     }
 
-    public BookReservationView getBookReservationView() {
+    protected BookReservationView getBookReservationView() {
         BookReservation bookReservation = new BookReservation();
         bookReservation.setUser(getTestUser());
         bookReservation.setBook(getTestBook());
@@ -529,6 +531,26 @@ public class TestSupport {
                 return false;
             }
         };
+    }
+
+    protected BookCommentDto getBookCommentDto() {
+        return new BookCommentDto(
+                1L,
+                null,
+                null,
+                "comment",
+                5.0,
+                "userFirstName",
+                "userLastName"
+        );
+    }
+
+    protected static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

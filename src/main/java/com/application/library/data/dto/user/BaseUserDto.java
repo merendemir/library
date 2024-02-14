@@ -2,6 +2,7 @@ package com.application.library.data.dto.user;
 
 import com.application.library.enumerations.UserRole;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class BaseUserDto {
@@ -49,5 +50,18 @@ public class BaseUserDto {
 
     public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseUserDto that = (BaseUserDto) o;
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(authorities, that.authorities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, firstName, lastName, authorities);
     }
 }

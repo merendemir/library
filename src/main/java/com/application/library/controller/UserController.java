@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
 import com.application.library.data.view.UserView;
@@ -41,7 +42,7 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "User with this email already exists",
+                            description = MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
@@ -61,7 +62,7 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User not found.",
+                            description = MessageConstants.USER_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
 
                     )
@@ -96,12 +97,12 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User not found.",
+                            description = MessageConstants.USER_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "403",
-                            description = "You are not authorized to delete librarian.",
+                            description = MessageConstants.NOT_AUTHORIZED_FOR_DELETE_LIBRARIAN,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }

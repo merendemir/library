@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.BookCommentDto;
 import com.application.library.data.dto.BookCommentRequestDto;
 import com.application.library.data.view.BookCommentStatsView;
@@ -34,6 +35,11 @@ public class BookCommentController {
                     @ApiResponse(
                             responseCode = "201",
                             description = "Comment saved successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = MessageConstants.BOOK_NOT_FOUND,
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
     @PostMapping("/book/{bookId}")
@@ -83,9 +89,15 @@ public class BookCommentController {
                     ),
                     @ApiResponse(
                             responseCode = "403",
-                            description = "You are not authorized to update this comment",
+                            description = MessageConstants.NOT_AUTHORIZED_FOR_UPDATE_COMMENT,
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = MessageConstants.BOOK_COMMENT_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
+
             })
     @PutMapping("/{commentId}")
     public ResponseEntity<ResponseHandler<Long>> updateComment(@PathVariable Long commentId,
@@ -103,7 +115,7 @@ public class BookCommentController {
                     ),
                     @ApiResponse(
                             responseCode = "403",
-                            description = "You are not authorized to delete this comment",
+                            description = MessageConstants.NOT_AUTHORIZED_FOR_DELETE_COMMENT,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })

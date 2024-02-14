@@ -1,5 +1,6 @@
 package com.application.library.service;
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.UserConverter;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
@@ -92,7 +93,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.saveBaseUser(requestDto))
                 .isInstanceOf(EntityAlreadyExistsException.class)
-                .hasMessage("User with this email already exists");
+                .hasMessage(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
 
         verify(userRepository, times(1)).existsByEmail(requestDto.getEmail());
         verifyNoInteractions(userConverter);
@@ -134,7 +135,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.saveUser(requestDto))
                 .isInstanceOf(EntityAlreadyExistsException.class)
-                .hasMessage("User with this email already exists");
+                .hasMessage(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
 
         verify(userRepository, times(1)).existsByEmail(requestDto.getEmail());
         verifyNoInteractions(userConverter);
@@ -169,7 +170,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.getUserById(user.getId()))
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).getUserById(user.getId());
     }
@@ -261,7 +262,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.deleteUserByActiveUserAuthority(user.getId()))
                 .isInstanceOf(AccessDeniedException.class)
-                .hasMessage("You are not authorized to delete librarian");
+                .hasMessage(MessageConstants.NOT_AUTHORIZED_FOR_DELETE_LIBRARIAN);
 
         verify(userRepository, times(1)).findById(user.getId());
         verifyNoMoreInteractions(userRepository);
@@ -312,7 +313,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.findById(user.getId()))
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).findById(user.getId());
     }
@@ -350,7 +351,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.updateUser(user.getId(), requestDto))
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).findById(user.getId());
         verifyNoMoreInteractions(userRepository);
@@ -389,7 +390,7 @@ class UserServiceTest extends TestSupport {
         // then
         assertThatThrownBy(() -> userService.updateUser(user.getId(), requestDto))
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User not found");
+                .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).findById(user.getId());
         verifyNoMoreInteractions(userRepository);

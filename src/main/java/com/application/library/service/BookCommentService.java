@@ -1,5 +1,6 @@
 package com.application.library.service;
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.BookCommentConverter;
 import com.application.library.data.dto.BookCommentDto;
 import com.application.library.data.dto.BookCommentRequestDto;
@@ -37,7 +38,7 @@ public class BookCommentService {
     public BookComment updateComment(Long commentId, BookCommentRequestDto requestDto) {
         BookComment bookComment = findById(commentId);
         if (!Objects.equals(bookComment.getUser().getId(), AuthHelper.getActiveUser().getId()))
-            throw new AccessDeniedException("You are not authorized to update this comment");
+            throw new AccessDeniedException(MessageConstants.NOT_AUTHORIZED_FOR_UPDATE_COMMENT);
 
         return bookCommentConverter.updateEntity(requestDto, bookComment);
     }
@@ -46,7 +47,7 @@ public class BookCommentService {
     public Long deleteComment(Long commentId) {
         BookComment bookComment = findById(commentId);
         if (!Objects.equals(bookComment.getUser().getId(), AuthHelper.getActiveUser().getId()))
-            throw new AccessDeniedException("You are not authorized to delete this comment");
+            throw new AccessDeniedException(MessageConstants.NOT_AUTHORIZED_FOR_DELETE_COMMENT);
 
         bookCommentRepository.delete(bookComment);
         return commentId;
@@ -65,7 +66,7 @@ public class BookCommentService {
     }
 
     private BookComment findById(Long id) {
-        return bookCommentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book comment not found"));
+        return bookCommentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.BOOK_COMMENT_NOT_FOUND));
     }
 
 }

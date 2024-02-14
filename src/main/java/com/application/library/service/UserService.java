@@ -1,5 +1,6 @@
 package com.application.library.service;
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.UserConverter;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
@@ -33,7 +34,7 @@ public class UserService {
 
     @Transactional
     public User saveBaseUser(BaseUserSaveRequestDto requestDto) {
-        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException("User with this email already exists");
+        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
 
         User user = userConverter.toEntity(requestDto);
         user.setAuthorities(Set.of(UserRole.ROLE_USER));
@@ -42,13 +43,13 @@ public class UserService {
 
     @Transactional
     public User saveUser(UserSaveRequestDto requestDto) {
-        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException("User with this email already exists");
+        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
         return userRepository.save(userConverter.toEntity(requestDto));
     }
 
     @Transactional(readOnly = true)
     public UserView getUserById(Long id) {
-        return userRepository.getUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return userRepository.getUserById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.USER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +70,7 @@ public class UserService {
 
         if (!AuthHelper.isUserAdmin()
                 && deleteUser.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(UserRole.ROLE_LIBRARIAN.name()))) {
-                throw new AccessDeniedException("You are not authorized to delete librarian");
+                throw new AccessDeniedException(MessageConstants.NOT_AUTHORIZED_FOR_DELETE_LIBRARIAN);
         }
 
         userRepository.delete(deleteUser);
@@ -78,7 +79,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.USER_NOT_FOUND));
     }
 
     @Transactional

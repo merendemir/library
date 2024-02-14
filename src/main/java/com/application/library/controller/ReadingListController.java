@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.view.ReadingListView;
 import com.application.library.service.ReadingListService;
 import com.application.library.utils.ErrorResponseHandler;
@@ -36,7 +37,7 @@ public class ReadingListController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Book not found",
+                            description = MessageConstants.BOOK_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
@@ -55,7 +56,7 @@ public class ReadingListController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Book not found",
+                            description = MessageConstants.BOOK_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })

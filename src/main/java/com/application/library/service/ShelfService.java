@@ -1,6 +1,7 @@
 package com.application.library.service;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.ShelfConverter;
 import com.application.library.data.dto.SaveShelfRequestDto;
 import com.application.library.data.view.shelf.ShelfBaseView;
@@ -34,7 +35,7 @@ public class ShelfService {
 
     @Transactional
     public Shelf saveShelf(SaveShelfRequestDto requestDto) {
-        if (existsByName(requestDto.getName())) throw new EntityAlreadyExistsException("Shelf with this name already exists");
+        if (existsByName(requestDto.getName())) throw new EntityAlreadyExistsException(MessageConstants.SHELF_ALREADY_EXISTS_WITH_NAME);
 
         Shelf shelf = shelfConverter.toEntity(requestDto);
         shelf.setAvailableCapacity(shelf.getCapacity());
@@ -43,18 +44,18 @@ public class ShelfService {
 
     @Transactional(readOnly = true)
     public Shelf findById(Long id) {
-        return ShelfRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Shelf not found"));
+        return ShelfRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.SHELF_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public ShelfView getShelfById(Long id) {
-        return ShelfRepository.getShelfById(id).orElseThrow(() -> new EntityNotFoundException("Shelf not found"));
+        return ShelfRepository.getShelfById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.SHELF_NOT_FOUND));
     }
 
     @Transactional
     public Long deleteShelf(Long id) {
         Shelf shelf = findById(id);
-        if (!shelf.getBooks().isEmpty()) throw new IllegalDeleteOperationException("Shelf is not empty, Cannot delete.");
+        if (!shelf.getBooks().isEmpty()) throw new IllegalDeleteOperationException(MessageConstants.SHELF_CANNOT_BE_DELETED);
 
         ShelfRepository.delete(shelf);
         return id;

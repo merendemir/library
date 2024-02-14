@@ -46,7 +46,7 @@ public class BookCommentDto {
         return user;
     }
 
-    class BookUserCommentUser {
+    public class BookUserCommentUser {
         private final String firstName;
         private final String lastName;
 

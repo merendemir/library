@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.LoginRequestDto;
 import com.application.library.data.dto.user.LoginResponseDto;
@@ -38,7 +39,7 @@ public class AuthController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "User with this email already exists",
+                            description = MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })

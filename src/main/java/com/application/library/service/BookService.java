@@ -1,5 +1,6 @@
 package com.application.library.service;
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.BookConverter;
 import com.application.library.data.dto.CreateBookRequestDto;
 import com.application.library.data.dto.SaveBookRequestDto;
@@ -53,12 +54,12 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Book findById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
+        return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.BOOK_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public BookView getBookById(Long id) {
-        return bookRepository.getBookById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
+        return bookRepository.getBookById(id).orElseThrow(() -> new EntityNotFoundException(MessageConstants.BOOK_NOT_FOUND));
     }
 
     @Transactional

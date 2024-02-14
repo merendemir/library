@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.SaveShelfRequestDto;
 import com.application.library.data.view.shelf.ShelfBaseView;
 import com.application.library.data.view.shelf.ShelfView;
@@ -36,14 +37,14 @@ public class ShelfController {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "Shelf with this name already exists",
+                    description = MessageConstants.SHELF_ALREADY_EXISTS_WITH_NAME,
                     content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
             )
     })
     @RolesAllowed({"ADMIN"})
     @PostMapping
     public ResponseEntity<ResponseHandler<Long>> saveShelf(@RequestBody SaveShelfRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(shelfService.saveShelf(requestDto).getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseHandler<>(shelfService.saveShelf(requestDto).getId()));
     }
 
     @Operation(summary = "Get shelf by ID", description = "Retrieve shelf information by providing the shelf ID.",
@@ -54,12 +55,12 @@ public class ShelfController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Shelf not found.",
+                            description = MessageConstants.SHELF_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }
     )
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ResponseHandler<ShelfView>> getShelf(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(shelfService.getShelfById(id)));
     }
@@ -78,12 +79,12 @@ public class ShelfController {
                             description = "Shelf deleted successfully"),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Shelf not found",
+                            description = MessageConstants.SHELF_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Shelf is not empty. Cannot delete.",
+                            description = MessageConstants.SHELF_CANNOT_BE_DELETED,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }
@@ -101,7 +102,7 @@ public class ShelfController {
                             description = "Shelf updated successfully"),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Shelf not found",
+                            description = MessageConstants.SHELF_NOT_FOUND,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
