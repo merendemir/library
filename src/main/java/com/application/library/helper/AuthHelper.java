@@ -20,7 +20,7 @@ public class AuthHelper {
         return Objects.requireNonNull(getUserAuthorities()).stream().anyMatch(r -> r.getAuthority().equals(UserRole.ROLE_ADMIN.name()));
     }
 
-    public static Collection<? extends GrantedAuthority> getUserAuthorities() {
+    private static Collection<? extends GrantedAuthority> getUserAuthorities() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (authentication == null) ? null : authentication.getAuthorities();
     }
