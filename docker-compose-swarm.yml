@@ -3,6 +3,8 @@ version: "3.9"
 services:
   library-application:
     image: merendemir/library-application:latest
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
     deploy:
       mode: replicated
       replicas: 1

@@ -3,6 +3,8 @@ version: '3.9'
 services:
   app:
     image: 'library-application:latest'
+    environment:
+      - "SPRING_PROFILES_ACTIVE=demo"
     build:
       context: .
     ports:
