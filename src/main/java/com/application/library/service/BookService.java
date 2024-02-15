@@ -41,7 +41,7 @@ public class BookService {
     @Transactional
     public Book saveBook(CreateBookRequestDto requestDto) {
         if (existsByIsbn(requestDto.getIsbn()))
-            throw new EntityAlreadyExistsException("Book with this ISBN already exists");
+            throw new EntityAlreadyExistsException(MessageConstants.BOOK_ALREADY_EXISTS_WITH_ISBN);
 
         Book book = bookConverter.toEntity(requestDto);
         shelfService.checkShelfCapacity(book.getShelf());
@@ -74,7 +74,7 @@ public class BookService {
         int lendBookCount = lendTransactionRepository.countAllByBook_IdAndReturnedFalse(book.getId());
 
         if (requestDto.getTotalCount() < lendBookCount)
-            throw new IllegalArgumentException("Total count cannot be less than lend book count");
+            throw new IllegalArgumentException(MessageConstants.BOOK_WILL_BE_LESS_THAN_LEND_BOOK_COUNT);
 
         return bookConverter.updateEntity(requestDto, book);
     }

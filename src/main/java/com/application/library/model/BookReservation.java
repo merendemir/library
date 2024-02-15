@@ -4,6 +4,7 @@ import com.application.library.core.model.IntegerSoftDeleteEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 @Entity(name = "book_reservation")
@@ -63,5 +64,18 @@ public class BookReservation extends IntegerSoftDeleteEntity {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookReservation that = (BookReservation) o;
+        return completed == that.completed && Objects.equals(user, that.user) && Objects.equals(book, that.book) && Objects.equals(reservationDate, that.reservationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, book, reservationDate, completed);
     }
 }

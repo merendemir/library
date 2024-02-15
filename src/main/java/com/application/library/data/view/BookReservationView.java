@@ -9,7 +9,7 @@ public interface BookReservationView extends IntegerEntityView {
 
     UserView getUser();
 
-    BookView getBooks();
+    BookView getBook();
 
     LocalDate getReservationDate();
 

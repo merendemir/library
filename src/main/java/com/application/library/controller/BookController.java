@@ -41,19 +41,19 @@ public class BookController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Shelf is full. Cannot save book.",
+                            description = MessageConstants.SHELF_FULL,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "Book with this ISBN already exists",
+                            description = MessageConstants.BOOK_ALREADY_EXISTS_WITH_ISBN,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
     @RolesAllowed({"ADMIN", "LIBRARIAN"})
     @PostMapping
     public ResponseEntity<ResponseHandler<Long>> saveBook(@RequestBody CreateBookRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(bookService.saveBook(requestDto).getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseHandler<>(bookService.saveBook(requestDto).getId()));
     }
 
     @Operation(summary = "Get book by ID", description = "Retrieve book information by providing the book ID.",
@@ -103,6 +103,11 @@ public class BookController {
                     responseCode = "200",
                     description = "Book updated successfully"),
             @ApiResponse(
+                    responseCode = "400",
+                    description = MessageConstants.BOOK_WILL_BE_LESS_THAN_LEND_BOOK_COUNT,
+                    content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = MessageConstants.BOOK_NOT_FOUND,
                     content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
@@ -121,7 +126,7 @@ public class BookController {
                             description = "Book moved successfully"),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Shelf is full. Cannot move book.",
+                            description = MessageConstants.SHELF_FULL,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(

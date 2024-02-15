@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.LendTransactionRequestDto;
 import com.application.library.data.view.transaction.lend.LendTransactionAuthUserView;
 import com.application.library.data.view.transaction.lend.LendTransactionView;
@@ -39,13 +40,13 @@ public class LendTransactionController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Book is not available for lending",
+                            description = MessageConstants.BOOK_NOT_AVAILABLE_FOR_LENDING,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
                     ,
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "User has already lent a book",
+                            responseCode = "409",
+                            description = MessageConstants.USER_HAS_ALREADY_LENT_A_BOOK,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
@@ -64,12 +65,12 @@ public class LendTransactionController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "You have to pay late fee",
+                            description = MessageConstants.MUST_PAY_LATE_FEE,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Book is already returned",
+                            description = MessageConstants.BOOK_HAS_ALREADY_BEEN_RETURN,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })
@@ -88,7 +89,7 @@ public class LendTransactionController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "No late fee to pay",
+                            description = MessageConstants.NO_LATE_FEE_TO_PAY,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })

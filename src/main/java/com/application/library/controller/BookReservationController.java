@@ -1,6 +1,7 @@
 package com.application.library.controller;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.BookReservationRequestDto;
 import com.application.library.data.view.BookReservationView;
 import com.application.library.service.BookReservationService;
@@ -37,23 +38,23 @@ public class BookReservationController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "User already has a reservation",
+                            description = MessageConstants.USER_ALREADY_HAS_A_RESERVATION,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "User has an uncompleted reservation",
+                            description = MessageConstants.USER_HAS_AN_UNCOMPLETED_RESERVATION,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
-                            responseCode = "409",
-                            description = "Book is not available for the selected date",
+                            responseCode = "400",
+                            description = MessageConstants.BOOK_IS_NOT_AVAILABLE_FOR_THE_SELECTED_DATE,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }
     )
     @PostMapping("/{bookId}")
-    public ResponseEntity<ResponseHandler<Long>> createNewReservation(@PathVariable Long bookId,
+    public ResponseEntity<ResponseHandler<Long>> reserveBook(@PathVariable Long bookId,
                                                                       @RequestBody BookReservationRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseHandler<>(bookReservationService.reserveBook(bookId, requestDto).getId()));
     }
@@ -69,7 +70,7 @@ public class BookReservationController {
             }
     )
     @GetMapping
-    public ResponseEntity<ResponseHandler<Page<BookReservationView>>> getAuthenticUserReservations(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<ResponseHandler<Page<BookReservationView>>> getAuthenticationUserReservations(@RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(new ResponseHandler<>(bookReservationService.getAuthenticationUserReservations(page, size)));
     }
 
@@ -83,12 +84,12 @@ public class BookReservationController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "Reservation is already completed",
+                            description = MessageConstants.RESERVATION_ALREADY_COMPLETED,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "Book is not available for the selected date",
+                            description = MessageConstants.BOOK_IS_NOT_AVAILABLE_FOR_THE_SELECTED_DATE,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }
@@ -108,7 +109,7 @@ public class BookReservationController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
-                            description = "Reservation is already completed",
+                            description = MessageConstants.RESERVATION_ALREADY_COMPLETED,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             }

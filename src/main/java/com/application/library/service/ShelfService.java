@@ -79,13 +79,13 @@ public class ShelfService {
 
     public void checkShelfCapacity(Shelf shelf) {
         if (shelf.getAvailableCapacity() <= 0) {
-            throw new ShelfFullException("Shelf is full");
+            throw new ShelfFullException(MessageConstants.SHELF_FULL);
         }
     }
 
     public void checkShelfCapacity(Shelf shelf, int newCapacity) {
         if (shelf.getBooks().size() > newCapacity) {
-            throw new ShelfFullException("Shelf will be full");
+            throw new ShelfFullException(MessageConstants.SHELF_WILL_FULL);
         }
     }
 

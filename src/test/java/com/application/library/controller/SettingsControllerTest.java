@@ -47,7 +47,6 @@ class SettingsControllerTest extends BaseRestControllerTest {
                         .param("lateFeePerDay", String.valueOf(lateFee))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(lateFee)))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(SettingsKey.LATE_FEE_PER_DAY.name())));
     }
@@ -59,7 +58,6 @@ class SettingsControllerTest extends BaseRestControllerTest {
 
         mockMvc.perform(get("/api/settings/late/fee")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(lateFee)));
     }
@@ -77,7 +75,6 @@ class SettingsControllerTest extends BaseRestControllerTest {
                         .param("lendDay", String.valueOf(lendDays))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(lendDays)))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(SettingsKey.LEND_DAY.name())));
     }
@@ -89,7 +86,6 @@ class SettingsControllerTest extends BaseRestControllerTest {
 
         mockMvc.perform(get("/api/settings/lend/day")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", is(lendDays)));
     }

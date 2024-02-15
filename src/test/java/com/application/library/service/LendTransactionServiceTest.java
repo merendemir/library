@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class LendTransactionServiceTest extends TestSupport {
@@ -116,8 +116,7 @@ class LendTransactionServiceTest extends TestSupport {
         LendTransaction beforeLend = getTestLendTransaction(false);
         beforeLend.setDeadlineDate(LocalDate.now());
 
-        LendTransaction afterLend = getTestLendTransaction(false);
-        afterLend.setReturned(true);
+        LendTransaction afterLend = getTestLendTransaction(beforeLend.getId(), true);
         afterLend.setReturnDate(LocalDateTime.now());
         afterLend.setDeadlineDate(LocalDate.now());
 
@@ -211,7 +210,7 @@ class LendTransactionServiceTest extends TestSupport {
         int page = 0;
         int size = 10;
         PageRequest pageRequest = PageRequest.of(page, size);
-        LendTransactionAuthUserView testLendTransactionView = LendTransactionAuthUserView(false);
+        LendTransactionAuthUserView testLendTransactionView = getLendTransactionAuthUserView(false);
         User testUser = getTestUser();
 
         Page<LendTransactionAuthUserView> expectedResult = new PageImpl<>(List.of(testLendTransactionView));
@@ -233,7 +232,7 @@ class LendTransactionServiceTest extends TestSupport {
         int page = 0;
         int size = 10;
         PageRequest pageRequest = PageRequest.of(page, size);
-        LendTransactionAuthUserView testLendTransactionView = LendTransactionAuthUserView(false);
+        LendTransactionAuthUserView testLendTransactionView = getLendTransactionAuthUserView(false);
         Long userId = 1L;
 
         Page<LendTransactionAuthUserView> expectedResult = new PageImpl<>(List.of(testLendTransactionView));

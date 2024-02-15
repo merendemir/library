@@ -299,12 +299,12 @@ public class TestSupport {
 
             @Override
             public Integer getTotalCount() {
-                return null;
+                return 0;
             }
 
             @Override
             public Integer getAvailableCount() {
-                return null;
+                return 0;
             }
 
             @Override
@@ -322,7 +322,7 @@ public class TestSupport {
     }
 
     protected ReadingList getTestReadingList() {
-        ReadingList readingList = new ReadingList();
+        ReadingList readingList = new testReadingList();
         readingList.setUser(getTestUser());
         readingList.setBooks(new HashSet<>());
         return readingList;
@@ -358,15 +358,39 @@ public class TestSupport {
         };
     }
 
+    class TestLendTransaction extends LendTransaction {
+
+        private UUID id;
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
+
+        @Override
+        public UUID getId() {
+            return id;
+        }
+    }
+
     protected LendTransaction getTestLendTransaction(boolean returned) {
-        LendTransaction lendTransaction = new LendTransaction();
+        TestLendTransaction lendTransaction = new TestLendTransaction();
+        lendTransaction.setId(UUID.randomUUID());
         lendTransaction.setUser(getTestUser());
         lendTransaction.setBook(getTestBook());
         lendTransaction.setReturned(returned);
         return lendTransaction;
     }
 
-    protected LendTransactionAuthUserView LendTransactionAuthUserView(boolean returned) {
+    protected LendTransaction getTestLendTransaction(UUID id, boolean returned) {
+        TestLendTransaction lendTransaction = new TestLendTransaction();
+        lendTransaction.setId(id);
+        lendTransaction.setUser(getTestUser());
+        lendTransaction.setBook(getTestBook());
+        lendTransaction.setReturned(returned);
+        return lendTransaction;
+    }
+
+    protected LendTransactionAuthUserView getLendTransactionAuthUserView(boolean returned) {
         LendTransaction testLendTransaction = getTestLendTransaction(returned);
         return new LendTransactionAuthUserView() {
             @Override
@@ -489,11 +513,23 @@ public class TestSupport {
         return bookComment;
     }
 
-    protected BookReservationView getBookReservationView() {
-        BookReservation bookReservation = new BookReservation();
+    class TestBookReservation extends BookReservation {
+        @Override
+        public Long getId() {
+            return 1L;
+        }
+    }
+
+    protected BookReservation getTestBookReservation() {
+        BookReservation bookReservation = new TestBookReservation();
         bookReservation.setUser(getTestUser());
         bookReservation.setBook(getTestBook());
         bookReservation.setReservationDate(LocalDate.now());
+        return bookReservation;
+    }
+
+    protected BookReservationView getBookReservationView() {
+        BookReservation bookReservation = getTestBookReservation();
         return new BookReservationView() {
             @Override
             public LocalDateTime getCreatedAt() {
@@ -521,8 +557,8 @@ public class TestSupport {
             }
 
             @Override
-            public BookView getBooks() {
-                return null;
+            public BookView getBook() {
+                return getTestBookView();
             }
 
 

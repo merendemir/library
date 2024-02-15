@@ -1,5 +1,7 @@
 package com.application.library.data.dto;
 
+import java.util.Objects;
+
 public class SaveBookRequestDto {
     private String name;
     private String author;
@@ -90,5 +92,18 @@ public class SaveBookRequestDto {
 
     public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SaveBookRequestDto that = (SaveBookRequestDto) o;
+        return Objects.equals(name, that.name) && Objects.equals(author, that.author) && Objects.equals(isbn, that.isbn) && Objects.equals(pageCount, that.pageCount) && Objects.equals(publisher, that.publisher) && Objects.equals(publishedAt, that.publishedAt) && Objects.equals(language, that.language) && Objects.equals(description, that.description) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(totalCount, that.totalCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, author, isbn, pageCount, publisher, publishedAt, language, description, imageUrl, totalCount);
     }
 }

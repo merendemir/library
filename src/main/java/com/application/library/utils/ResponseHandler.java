@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 public class ResponseHandler<T> {
 
 
-    private T data;
-    private LocalDateTime timestamp;
+    private final T data;
+    private final LocalDateTime timestamp;
 
     public ResponseHandler(T data) {
         this.data = data;
@@ -18,15 +18,9 @@ public class ResponseHandler<T> {
         return data;
     }
 
-    public void setData(T data) {
-        this.data = data;
-    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

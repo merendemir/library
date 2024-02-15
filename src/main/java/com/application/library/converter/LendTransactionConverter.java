@@ -1,5 +1,6 @@
 package com.application.library.converter;
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.LendTransactionRequestDto;
 import com.application.library.exception.EntityAlreadyExistsException;
 import com.application.library.helper.AuthHelper;
@@ -49,7 +50,7 @@ public abstract class LendTransactionConverter {
     Book idToBook(Long id) {
         if (id == null) return null;
         Book book = bookService.findById(id);
-        if (!book.isAvailable()) throw new EntityAlreadyExistsException("Book is not available for lending");
+        if (!book.isAvailable()) throw new EntityAlreadyExistsException(MessageConstants.BOOK_NOT_AVAILABLE_FOR_LENDING);
 
         long reservedCount = bookReservationRepository.countByBook_IdAndReservationDateBeforeAndCompletedFalse(id, LocalDate.now().plusDays(settingsService.getLendDay()));
         if (reservedCount >= book.getAvailableCount())
@@ -63,7 +64,7 @@ public abstract class LendTransactionConverter {
         if (id == null) return null;
         User user = userService.findById(id);
         if (lendTransactionRepository.existsByUser_IdAndReturnedFalse(user.getId()))
-            throw new EntityAlreadyExistsException("User has already lent a book");
+            throw new EntityAlreadyExistsException(MessageConstants.USER_HAS_ALREADY_LENT_A_BOOK);
         return user;
     }
 

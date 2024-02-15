@@ -1,6 +1,7 @@
 package com.application.library.service;
 
 
+import com.application.library.constants.MessageConstants;
 import com.application.library.converter.LendTransactionConverter;
 import com.application.library.data.dto.LendTransactionRequestDto;
 import com.application.library.data.view.transaction.lend.LendTransactionAuthUserView;
@@ -54,11 +55,11 @@ public class LendTransactionService {
     public LendTransaction returnBook(UUID id) {
         LendTransaction lendTransaction = findById(id);
 
-        if (lendTransaction.isReturned()) throw new IllegalStateException("Book is already returned");
+        if (lendTransaction.isReturned()) throw new IllegalStateException(MessageConstants.BOOK_HAS_ALREADY_BEEN_RETURN);
 
         double calculatedLateFee = calculateLateFee(lendTransaction);
 
-        if (calculatedLateFee > 0) throw new IllegalStateException("You have to pay late fee: " + calculatedLateFee);
+        if (calculatedLateFee > 0) throw new IllegalStateException(MessageConstants.MUST_PAY_LATE_FEE + " " + calculatedLateFee);
 
         lendTransaction.setReturned(true);
         lendTransaction.setReturnDate(LocalDateTime.now());
@@ -73,7 +74,7 @@ public class LendTransactionService {
         LendTransaction lendTransaction = findById(id);
         double calculatedLateFee = calculateLateFee(lendTransaction);
 
-        if (calculatedLateFee <= 0) throw new IllegalStateException("No late fee to pay");
+        if (calculatedLateFee <= 0) throw new IllegalStateException(MessageConstants.NO_LATE_FEE_TO_PAY);
 
         double payedFee = lendTransaction.getLateFeePaid() == null ? 0 : lendTransaction.getLateFeePaid();
         lendTransaction.setLateFeePaid(calculatedLateFee + payedFee);

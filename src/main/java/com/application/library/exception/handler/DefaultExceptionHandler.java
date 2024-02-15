@@ -59,6 +59,11 @@ public class DefaultExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseHandler(exception.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseHandler> handleIllegalArgumentExceptions(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseHandler(exception.getMessage()));
+    }
+
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseHandler> handleEntityAlreadyExistsExceptions(EntityAlreadyExistsException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseHandler(exception.getMessage()));

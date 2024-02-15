@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,7 +53,6 @@ class AuthControllerTest extends BaseRestControllerTest {
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(baseUserSaveRequestDto)))
-                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data", is(testUser.getId().intValue())));
     }
@@ -69,7 +67,6 @@ class AuthControllerTest extends BaseRestControllerTest {
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(baseUserSaveRequestDto)))
-                .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorMessage", is(errorMessage)));
     }
@@ -96,7 +93,6 @@ class AuthControllerTest extends BaseRestControllerTest {
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequestDto)))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.user.id", is(baseUserDto.getId().intValue())))
                 .andExpect(jsonPath("$.data.user.email", is(baseUserDto.getEmail())))
@@ -113,7 +109,6 @@ class AuthControllerTest extends BaseRestControllerTest {
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequestDto)))
-                .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 }

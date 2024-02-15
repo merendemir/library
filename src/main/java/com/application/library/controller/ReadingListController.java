@@ -42,7 +42,7 @@ public class ReadingListController {
                     )
             })
     @PostMapping("/book/{bookId}")
-    public ResponseEntity<ResponseHandler<Long>> saveBookComments(@PathVariable Long bookId) {
+    public ResponseEntity<ResponseHandler<Long>> addBookToReadingList(@PathVariable Long bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(readingListService.addBookToReadingList(bookId).getId()));
     }
 
@@ -61,7 +61,7 @@ public class ReadingListController {
                     )
             })
     @DeleteMapping("/book/{bookId}")
-    public ResponseEntity<ResponseHandler<Long>> deleteBookComments(@PathVariable Long bookId) {
+    public ResponseEntity<ResponseHandler<Long>> removeBookFromReadingList(@PathVariable Long bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(readingListService.removeBookFromReadingList(bookId).getId()));
     }
 
