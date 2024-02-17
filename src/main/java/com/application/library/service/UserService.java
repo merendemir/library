@@ -89,7 +89,7 @@ public class UserService {
 
     @Transactional
     public User updateActiveUserInfo(BaseUserSaveRequestDto requestDto) {
-        return userConverter.updateEntity(requestDto, AuthHelper.getActiveUser());
+        return userRepository.save(userConverter.updateEntity(requestDto, AuthHelper.getActiveUser()));
     }
 
     private Page<UserView> findAllByAuthorities(UserRole role, PageRequest pageRequest) {
