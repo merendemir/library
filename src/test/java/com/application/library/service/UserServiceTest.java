@@ -368,6 +368,7 @@ class UserServiceTest extends TestSupport {
         // when
         when(AuthHelper.getActiveUser()).thenReturn(user);
         when(userConverter.updateEntity(requestDto, user)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
         // then
         User result = userService.updateActiveUserInfo(requestDto);
@@ -375,6 +376,7 @@ class UserServiceTest extends TestSupport {
         assertEquals(user, result);
 
         verify(userConverter, times(1)).updateEntity(requestDto, user);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
