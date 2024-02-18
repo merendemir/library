@@ -355,7 +355,6 @@ class UserServiceTest extends TestSupport {
                 .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).findById(user.getId());
-        verify(userRepository, times(1)).existsByEmail(requestDto.getEmail());
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(userConverter);
     }
