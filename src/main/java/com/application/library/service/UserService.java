@@ -4,6 +4,7 @@ import com.application.library.constants.MessageConstants;
 import com.application.library.converter.UserConverter;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.exception.EntityAlreadyExistsException;
@@ -53,7 +54,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserView> getAllUsersByActiveUserAuthority(Optional<UserRole> userType, int page, int size, Optional<String> sortParam, Optional<Sort.Direction> direction) {
+    public Page<UserListView> getAllUsersByActiveUserAuthority(Optional<UserRole> userType, int page, int size, Optional<String> sortParam, Optional<Sort.Direction> direction) {
         PageRequest pageRequest = getPageRequest(page, size, sortParam, direction);
         if (AuthHelper.isUserAdmin()) {
             return userType.map(userRole ->
@@ -84,6 +85,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(Long userId, UserSaveRequestDto requestDto) {
+        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
         return userConverter.updateEntity(requestDto, findById(userId));
     }
 
@@ -92,7 +94,7 @@ public class UserService {
         return userRepository.save(userConverter.updateEntity(requestDto, AuthHelper.getActiveUser()));
     }
 
-    private Page<UserView> findAllByAuthorities(UserRole role, PageRequest pageRequest) {
+    private Page<UserListView> findAllByAuthorities(UserRole role, PageRequest pageRequest) {
         return userRepository.findAllByAuthorities(role, pageRequest);
     }
 

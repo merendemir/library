@@ -1,6 +1,7 @@
 package com.application.library.repository;
 
 
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.model.User;
@@ -18,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<UserView> getUserById(Long id);
 
-    Page<UserView> getAllBy(Pageable pageable);
+    Page<UserListView> getAllBy(Pageable pageable);
 
-    Page<UserView> findAllByAuthorities(UserRole role, Pageable pageable);
+    Page<UserListView> findAllByAuthorities(UserRole role, Pageable pageable);
 }

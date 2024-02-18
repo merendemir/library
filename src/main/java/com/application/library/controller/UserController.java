@@ -4,6 +4,7 @@ package com.application.library.controller;
 import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.service.UserService;
@@ -78,11 +79,11 @@ public class UserController {
     @Operation(summary = "Get all users", description = "Retrieve a paginated list of all users based on optional parameters. Requires ADMIN or LIBRARIAN role.")
     @RolesAllowed({"ADMIN", "LIBRARIAN"})
     @GetMapping
-    public ResponseEntity<ResponseHandler<Page<UserView>>> getAllUsers(@RequestParam Optional<UserRole> userType,
-                                                                       @RequestParam Optional<String> sortParam,
-                                                                       @RequestParam Optional<Sort.Direction> direction,
-                                                                       @RequestParam int page,
-                                                                       @RequestParam int size) {
+    public ResponseEntity<ResponseHandler<Page<UserListView>>> getAllUsers(@RequestParam Optional<UserRole> userType,
+                                                                           @RequestParam Optional<String> sortParam,
+                                                                           @RequestParam Optional<Sort.Direction> direction,
+                                                                           @RequestParam int page,
+                                                                           @RequestParam int size) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(
                 userService.getAllUsersByActiveUserAuthority(userType, page, size, sortParam, direction)));
     }
@@ -122,6 +123,11 @@ public class UserController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "User not found.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL,
                             content = @Content(schema = @Schema(implementation = ErrorResponseHandler.class))
                     )
             })

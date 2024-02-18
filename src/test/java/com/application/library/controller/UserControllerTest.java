@@ -3,6 +3,7 @@ package com.application.library.controller;
 import com.application.library.constants.MessageConstants;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.exception.EntityAlreadyExistsException;
@@ -111,14 +112,14 @@ class UserControllerTest extends BaseRestControllerTest {
 
     @Test
     void testGetAllUsers_whenGetAllUsersCalled_shouldReturnUserList() throws Exception {
-        UserView testUser = getTestUserView();
+        UserListView testUser = getTestUserListView();
         int page = 0;
         int size = 10;
 
-        List<UserView> testUserViewList = List.of(getTestUserView());
+        List<UserListView> testUserListViewList = List.of(testUser);
 
         Pageable pageable = PageRequest.of(0, 10);
-        PageImpl<UserView> userViewPage = new PageImpl<>(testUserViewList, pageable, testUserViewList.size());
+        PageImpl<UserListView> userViewPage = new PageImpl<>(testUserListViewList, pageable, testUserListViewList.size());
 
         when(userService.getAllUsersByActiveUserAuthority(Optional.empty(), page, size, Optional.empty(), Optional.empty())).thenReturn(userViewPage);
 
@@ -141,10 +142,10 @@ class UserControllerTest extends BaseRestControllerTest {
         int size = 10;
         String userType = "ROLE_USER";
 
-        List<UserView> testUserViewList = List.of(getTestUserView());
+        List<UserListView> testUserListViewList = List.of(getTestUserListView());
 
         Pageable pageable = PageRequest.of(0, 10);
-        PageImpl<UserView> userViewPage = new PageImpl<>(testUserViewList, pageable, testUserViewList.size());
+        PageImpl<UserListView> userViewPage = new PageImpl<>(testUserListViewList, pageable, testUserListViewList.size());
 
         when(userService.getAllUsersByActiveUserAuthority(Optional.of(UserRole.ROLE_USER), page, size, Optional.empty(), Optional.empty())).thenReturn(userViewPage);
 

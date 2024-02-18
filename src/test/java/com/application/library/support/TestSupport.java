@@ -5,6 +5,7 @@ import com.application.library.data.dto.BookCommentRequestDto;
 import com.application.library.data.dto.user.BaseUserDto;
 import com.application.library.data.view.BookReservationView;
 import com.application.library.data.view.ReadingListView;
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.data.view.book.BaseBookView;
 import com.application.library.data.view.book.BookView;
@@ -135,6 +136,11 @@ public class TestSupport {
             }
 
             @Override
+            public Set<UserRole> getAuthorities() {
+                return testUser.getAuthorities();
+            }
+
+            @Override
             public String getFirstName() {
                 return testUser.getFirstName();
             }
@@ -146,6 +152,43 @@ public class TestSupport {
 
         };
     }
+
+    protected UserListView getTestUserListView() {
+        User testUser = getTestUser();
+        return new UserListView() {
+            @Override
+            public LocalDateTime getCreatedAt() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getUpdatedAt() {
+                return null;
+            }
+
+            @Override
+            public Long getId() {
+                return testUser.getId();
+            }
+
+            @Override
+            public String getEmail() {
+                return testUser.getEmail();
+            }
+
+            @Override
+            public String getFirstName() {
+                return testUser.getFirstName();
+            }
+
+            @Override
+            public String getLastName() {
+                return testUser.getLastName();
+            }
+
+        };
+    }
+
 
     class testShelf extends Shelf {
         @Override
@@ -347,8 +390,8 @@ public class TestSupport {
             }
 
             @Override
-            public UserView getUser() {
-                return getTestUserView();
+            public UserListView getUser() {
+                return getTestUserListView();
             }
 
             @Override
@@ -479,12 +522,12 @@ public class TestSupport {
             }
 
             @Override
-            public UserView getUser() {
-                return getTestUserView();
+            public UserListView getUser() {
+                return getTestUserListView();
             }
 
             @Override
-            public UserView getLender() {
+            public UserListView getLender() {
                 return null;
             }
         };
@@ -552,8 +595,8 @@ public class TestSupport {
             }
 
             @Override
-            public UserView getUser() {
-                return getTestUserView();
+            public UserListView getUser() {
+                return getTestUserListView();
             }
 
             @Override

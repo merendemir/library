@@ -4,6 +4,7 @@ import com.application.library.constants.MessageConstants;
 import com.application.library.converter.UserConverter;
 import com.application.library.data.dto.user.BaseUserSaveRequestDto;
 import com.application.library.data.dto.user.UserSaveRequestDto;
+import com.application.library.data.view.UserListView;
 import com.application.library.data.view.UserView;
 import com.application.library.enumerations.UserRole;
 import com.application.library.exception.EntityAlreadyExistsException;
@@ -180,14 +181,14 @@ class UserServiceTest extends TestSupport {
         // given
         int page = 0;
         int size = 10;
-        Page<UserView> expected = new PageImpl<>(List.of(getTestUserView()));
+        Page<UserListView> expected = new PageImpl<>(List.of(getTestUserListView()));
 
         // when
         when(userRepository.getAllBy(any(PageRequest.class))).thenReturn(expected);
         when(AuthHelper.isUserAdmin()).thenReturn(true);
 
         // then
-        Page<UserView> result = userService.getAllUsersByActiveUserAuthority(Optional.empty(), page, size, Optional.empty(), Optional.empty());
+        Page<UserListView> result = userService.getAllUsersByActiveUserAuthority(Optional.empty(), page, size, Optional.empty(), Optional.empty());
 
         assertEquals(expected, result);
 
@@ -199,13 +200,13 @@ class UserServiceTest extends TestSupport {
         // given
         int page = 0;
         int size = 10;
-        Page<UserView> expected = new PageImpl<>(List.of(getTestUserView()));
+        Page<UserListView> expected = new PageImpl<>(List.of(getTestUserListView()));
 
         when(userRepository.findAllByAuthorities(any(UserRole.class), any())).thenReturn(expected);
         when(AuthHelper.isUserAdmin()).thenReturn(true);
 
         // then
-        Page<UserView> result = userService.getAllUsersByActiveUserAuthority(Optional.of(UserRole.ROLE_USER), page, size, Optional.of("firstName"), Optional.of(Sort.Direction.ASC));
+        Page<UserListView> result = userService.getAllUsersByActiveUserAuthority(Optional.of(UserRole.ROLE_USER), page, size, Optional.of("firstName"), Optional.of(Sort.Direction.ASC));
 
         assertEquals(expected, result);
 
@@ -217,14 +218,14 @@ class UserServiceTest extends TestSupport {
         // given
         int page = 0;
         int size = 10;
-        Page<UserView> expected = new PageImpl<>(List.of(getTestUserView()));
+        Page<UserListView> expected = new PageImpl<>(List.of(getTestUserListView()));
 
         // when
         when(userRepository.findAllByAuthorities(any(UserRole.class), any())).thenReturn(expected);
         when(AuthHelper.isUserAdmin()).thenReturn(false);
 
         // then
-        Page<UserView> result = userService.getAllUsersByActiveUserAuthority(Optional.empty(), page, size, Optional.empty(), Optional.empty());
+        Page<UserListView> result = userService.getAllUsersByActiveUserAuthority(Optional.empty(), page, size, Optional.empty(), Optional.empty());
 
         assertEquals(expected, result);
 
@@ -354,6 +355,7 @@ class UserServiceTest extends TestSupport {
                 .hasMessage(MessageConstants.USER_NOT_FOUND);
 
         verify(userRepository, times(1)).findById(user.getId());
+        verify(userRepository, times(1)).existsByEmail(requestDto.getEmail());
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(userConverter);
     }
@@ -377,26 +379,6 @@ class UserServiceTest extends TestSupport {
 
         verify(userConverter, times(1)).updateEntity(requestDto, user);
         verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void testUpdateActiveUser_whenUserNotExists_shouldThrowEntityNotFoundException() {
-        // given
-        User user = getTestUser();
-        UserSaveRequestDto requestDto = new UserSaveRequestDto();
-        requestDto.setEmail("new_email");
-
-        // when
-        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
-
-        // then
-        assertThatThrownBy(() -> userService.updateUser(user.getId(), requestDto))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage(MessageConstants.USER_NOT_FOUND);
-
-        verify(userRepository, times(1)).findById(user.getId());
-        verifyNoMoreInteractions(userRepository);
-        verifyNoInteractions(userConverter);
     }
 
 }

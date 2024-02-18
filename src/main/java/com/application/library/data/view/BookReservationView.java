@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public interface BookReservationView extends IntegerEntityView {
 
-    UserView getUser();
+    UserListView getUser();
 
     BookView getBook();
 

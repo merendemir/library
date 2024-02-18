@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface ReadingListView extends IntegerEntityView {
 
-        UserView getUser();
+        UserListView getUser();
 
         Set<BookView> getBooks();
 
