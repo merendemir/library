@@ -85,8 +85,9 @@ public class UserService {
 
     @Transactional
     public User updateUser(Long userId, UserSaveRequestDto requestDto) {
-        if (existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
-        return userConverter.updateEntity(requestDto, findById(userId));
+        User user = findById(userId);
+        if (!user.getEmail().equals(requestDto.getEmail()) && existsByEmail(requestDto.getEmail())) throw new EntityAlreadyExistsException(MessageConstants.USER_ALREADY_EXISTS_WITH_EMAIL);
+        return userConverter.updateEntity(requestDto, user);
     }
 
     @Transactional

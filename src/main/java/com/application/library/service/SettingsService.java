@@ -60,7 +60,7 @@ public class SettingsService {
         return settingsRepository.save(settings);
     }
 
-    @Cacheable(value = CachingConfig.LATE_FEE_PER_DAY)
+    @Cacheable(value = CachingConfig.LEND_DAY)
     @Transactional(readOnly = true)
     public int getLendDay() {
         Optional<Settings> lateFeePerDaySettings = settingsRepository.findById(SettingsKey.LEND_DAY);
