@@ -85,7 +85,7 @@ public class ShelfService {
 
     public void checkShelfCapacity(Shelf shelf, int newCapacity) {
         if (shelf.getBooks().size() > newCapacity) {
-            throw new ShelfFullException(MessageConstants.SHELF_WILL_FULL);
+            throw new ShelfFullException(MessageConstants.SHELF_CAPACITY_CAN_NOT_LOWER_THEN_BOOK_COUNT);
         }
     }
 

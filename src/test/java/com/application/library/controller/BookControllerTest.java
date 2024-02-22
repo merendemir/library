@@ -262,4 +262,33 @@ class BookControllerTest extends BaseRestControllerTest {
                 .andExpect(jsonPath("$.errorMessage", is(errorMessage)));
     }
 
+    @Test
+    void testGetBooksByShelfId_whenGetBooksByShelfIdCalledWithShelfId_shouldReturnBooks() throws Exception {
+        // given
+        Long shelfId = 1L;
+
+        // given
+        int page = 0;
+        int size = 10;
+
+        BookView testBookView = getTestBookView();
+        Pageable pageable = PageRequest.of(page, size);
+        List<BookView> bookViews = Collections.singletonList(testBookView);
+        PageImpl<BookView> bookViewPage = new PageImpl<>(bookViews, pageable, bookViews.size());
+        when(bookService.findBooksByShelfId(shelfId, page, size)).thenReturn(bookViewPage);
+
+        mockMvc.perform(get("/api/books/shelf/{shelfId}?page=0&size=10", shelfId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content[0].id", is(testBookView.getId().intValue())))
+                .andExpect(jsonPath("$.data.content[0].name", is(testBookView.getName())))
+                .andExpect(jsonPath("$.data.content[0].author", is(testBookView.getAuthor())))
+                .andExpect(jsonPath("$.data.content[0].isbn", is(testBookView.getIsbn())))
+                .andExpect(jsonPath("$.data.content[0].shelf.id", is(testBookView.getShelf().getId().intValue())))
+                .andExpect(jsonPath("$.data.content[0].shelf.name", is(testBookView.getShelf().getName())))
+                .andExpect(jsonPath("$.data.content[0].pageCount", is(testBookView.getPageCount())))
+                .andExpect(jsonPath("$.data.content[0].publisher", is(testBookView.getPublisher())))
+                .andExpect(jsonPath("$.data.content[0].publishedAt", is(testBookView.getPublishedAt())))
+                .andExpect(jsonPath("$.data.content[0].language", is(testBookView.getLanguage())));
+    }
+
 }

@@ -140,4 +140,11 @@ public class BookController {
     public ResponseEntity<ResponseHandler<Long>> moveBook(@PathVariable Long id, @RequestParam Long shelfId) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(bookService.moveBook(id, shelfId).getId()));
     }
+
+
+    @Operation(summary = "Get books by shelf ID", description = "Retrieve a paginated list of books by providing the shelf ID.")
+    @GetMapping("/shelf/{id}")
+    public ResponseEntity<ResponseHandler<Page<BookView>>> getBooksByShelfId(@PathVariable Long id, @RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseHandler<>(bookService.findBooksByShelfId(id, page, size)));
+    }
 }

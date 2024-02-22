@@ -228,10 +228,6 @@ public class TestSupport {
                 return testShelf.getAvailableCapacity();
             }
 
-            @Override
-            public Set<BookView> getBooks() {
-                return null;
-            }
         };
     }
 

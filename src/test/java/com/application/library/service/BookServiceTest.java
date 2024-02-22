@@ -1,6 +1,7 @@
 package com.application.library.service;
 
 import com.application.library.converter.BookConverter;
+import com.application.library.data.dto.BookCommentDto;
 import com.application.library.data.dto.CreateBookRequestDto;
 import com.application.library.data.dto.SaveBookRequestDto;
 import com.application.library.data.view.book.BookView;
@@ -14,9 +15,7 @@ import com.application.library.support.TestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -321,6 +320,26 @@ class BookServiceTest extends TestSupport {
 
         verify(bookRepository, times(1)).findById(bookId);
         verify(shelfService, times(1)).findById(shelfId);
+    }
+
+    @Test
+    void testFindBookByShelfId_whenFindBookByShelfIdCalledWithShelfId_shouldReturnPageOfBookView() {
+        // given
+        Long shelfId = 1L;
+        BookView testBook = getTestBookView();
+        List<BookView> testBookList = List.of(testBook);
+
+        Pageable pageable = PageRequest.of(0, 10);
+        PageImpl<BookView> expectedResult = new PageImpl<>(testBookList, pageable, testBookList.size());
+
+        // when
+        when(bookRepository.findAllByShelfId(shelfId, pageable)).thenReturn(expectedResult);
+
+        // then
+        Page<BookView> result = bookService.findBooksByShelfId(shelfId, 0, 10);
+        assertEquals(expectedResult, result);
+
+        verify(bookRepository, times(1)).findAllByShelfId(shelfId, pageable);
     }
 
 

@@ -15,7 +15,7 @@ public class MessageConstants {
     public static final String SHELF_ALREADY_EXISTS_WITH_NAME = "Shelf with this name already exists.";
     public static final String SHELF_NOT_FOUND = "Shelf not found.";
     public static final String SHELF_FULL = "Shelf is full, Cannot add more books.";
-    public static final String SHELF_WILL_FULL = "Shelf will be full after adding this book.";
+    public static final String SHELF_CAPACITY_CAN_NOT_LOWER_THEN_BOOK_COUNT = "Shelf capacity cannot be lower than book count.";
     public static final String SHELF_CANNOT_BE_DELETED = "Shelf cannot be deleted as it contains books.";
     public static final String BOOK_ALREADY_EXISTS_WITH_ISBN = "Book with this ISBN already exists.";
     public static final String BOOK_WILL_BE_LESS_THAN_LEND_BOOK_COUNT = "Total count cannot be less than lend book count.";

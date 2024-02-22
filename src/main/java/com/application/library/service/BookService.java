@@ -98,6 +98,11 @@ public class BookService {
         return book;
     }
 
+    @Transactional(readOnly = true)
+    public Page<BookView> findBooksByShelfId(Long shelfId, int page, int size) {
+        return bookRepository.findAllByShelfId(shelfId, PageRequest.of(page, size));
+    }
+
     private PageRequest getPageRequest(int page, int size, Optional<String> sortParam, Optional<Sort.Direction> direction) {
         return sortParam.isPresent() && direction.isPresent() ?
                 PageRequest.of(page, size, direction.get(), sortParam.get()) :
